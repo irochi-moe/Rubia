@@ -320,6 +320,19 @@ index b443aba38258f501f8f00be6b055f07b709277c4..e69fd412bfffea8216d01ad12a886b20
      private final String serverVersion;
      private final String bukkitVersion = Versioning.getBukkitVersion();
      private final Logger logger = Logger.getLogger("Minecraft");
+diff --git a/src/main/java/org/bukkit/craftbukkit/Main.java b/src/main/java/org/bukkit/craftbukkit/Main.java
+index 56a784e943cb5d8b15b41e3e66545ebf166c221c..3e86f99d974b6829b1675a61bf14d6a4b3ba258d 100644
+--- a/src/main/java/org/bukkit/craftbukkit/Main.java
++++ b/src/main/java/org/bukkit/craftbukkit/Main.java
+@@ -276,7 +276,7 @@ public class Main {
+                     if (buildDate.before(deadline.getTime())) {
+                         // Paper start - This is some stupid bullshit
+                         System.err.println("*** Warning, you've not updated in a while! ***");
+-                        System.err.println("*** Please download a new build as per instructions from https://papermc.io/downloads ***"); // Paper
++                        System.err.println("*** Please download a new build at https://github.com/IrochiMC/Rubia ***"); // Paper // Rubia
+                         //System.err.println("*** Server will start in 20 seconds ***");
+                         //Thread.sleep(TimeUnit.SECONDS.toMillis(20));
+                         // Paper End
 diff --git a/src/main/java/org/bukkit/craftbukkit/scheduler/CraftScheduler.java b/src/main/java/org/bukkit/craftbukkit/scheduler/CraftScheduler.java
 index cdefb2025eedea7e204d70d568adaf1c1ec4c03c..faa3fc872b8b894b2b2f25474ab5ff891ccffa20 100644
 --- a/src/main/java/org/bukkit/craftbukkit/scheduler/CraftScheduler.java
