@@ -1,27 +1,35 @@
-.gradle/
-build/
-
-# Eclipse stuff
+# Eclipse
 .classpath
 .project
 .settings/
 
-# VSCode stuff
+# VSCode
 .vscode/
 
-# netbeans
-nbproject/
-nbactions.xml
+# IntelliJ
+*.iml
+*.ipr
+*.iws
+.idea/
+out/
 
-# we use maven!
-build.xml
-
-# maven
+# Maven
 target/
 dependency-reduced-pom.xml
 
-# vim
+# Gradle
+.gradle/
+build/
+
+# Vim
 .*.sw[a-p]
+
+# Mac filesystem
+.DS_Store/
+.DS_Store
+
+# Linux temp files
+*~
 
 # various other potential build files
 build/
@@ -29,21 +37,7 @@ bin/
 dist/
 manifest.mf
 
-# Mac filesystem dust
-.DS_Store/
-.DS_Store
-
-# intellij
-*.iml
-*.ipr
-*.iws
-.idea/
-out/
-
-# Linux temp files
-*~
-
-# other stuff
+# Other files
 run/
 
 Rubia-API
