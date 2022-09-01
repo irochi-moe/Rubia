@@ -273,7 +273,7 @@ index abe37c7c3c6f5ab73afd738ec78f06d7e4d2ed96..a728593563d8ae93d516d6f496a6cf63
          stringbuilder.append(CrashReport.getErrorComment());
          stringbuilder.append("\n\n");
 diff --git a/src/main/java/net/minecraft/server/MinecraftServer.java b/src/main/java/net/minecraft/server/MinecraftServer.java
-index f23be38ef96a81ce3867a3b6fdccf632fe285f31..0961135a797d6cfa744221a60f1bc9d98bf2f778 100644
+index d2161a3c3b9a2b2d463ac778656c95167c10a49d..18e27feca3c07e5ea6849fe9634b9694cf84b3e3 100644
 --- a/src/main/java/net/minecraft/server/MinecraftServer.java
 +++ b/src/main/java/net/minecraft/server/MinecraftServer.java
 @@ -911,7 +911,7 @@ public abstract class MinecraftServer extends ReentrantBlockableEventLoop<TickTa
@@ -285,7 +285,7 @@ index f23be38ef96a81ce3867a3b6fdccf632fe285f31..0961135a797d6cfa744221a60f1bc9d9
              while (this.getRunningThread().isAlive()) {
                  this.getRunningThread().stop();
                  try {
-@@ -1655,7 +1655,7 @@ public abstract class MinecraftServer extends ReentrantBlockableEventLoop<TickTa
+@@ -1673,7 +1673,7 @@ public abstract class MinecraftServer extends ReentrantBlockableEventLoop<TickTa
  
      @DontObfuscate
      public String getServerModName() {
@@ -308,10 +308,10 @@ index c31b9a6b1d4548d507ecb60d42ca9f96f49f6c4b..98fc0e31fd7dedd943aa61c3b9327030
  
      private static final int DEFAULT_SIZE_THRESHOLD = 1024 * 8;
 diff --git a/src/main/java/org/bukkit/craftbukkit/CraftServer.java b/src/main/java/org/bukkit/craftbukkit/CraftServer.java
-index bfde5bbcccfaa754ec6bdf4f3817981a93e465bd..056aed6e9019f738236a1ce1a4a8cb34519f0602 100644
+index b443aba38258f501f8f00be6b055f07b709277c4..e69fd412bfffea8216d01ad12a886b2067fd6158 100644
 --- a/src/main/java/org/bukkit/craftbukkit/CraftServer.java
 +++ b/src/main/java/org/bukkit/craftbukkit/CraftServer.java
-@@ -246,7 +246,7 @@ import javax.annotation.Nullable; // Paper
+@@ -248,7 +248,7 @@ import javax.annotation.Nullable; // Paper
  import javax.annotation.Nonnull; // Paper
  
  public final class CraftServer implements Server {
@@ -334,7 +334,7 @@ index cdefb2025eedea7e204d70d568adaf1c1ec4c03c..faa3fc872b8b894b2b2f25474ab5ff89
                  // (async tasks must live with race-conditions if they attempt to cancel between these few lines of code)
              }
 diff --git a/src/main/java/org/bukkit/craftbukkit/util/CraftMagicNumbers.java b/src/main/java/org/bukkit/craftbukkit/util/CraftMagicNumbers.java
-index 0a4e9b0957c9b0abbb88d472b5b3d7946c256af2..942816091862b66b9b7fbffeb5b29c3648327789 100644
+index 1628913b1e9b91e68dcd942a38da4aed95b12d4a..3974a85b694471483800ba6a13258826be8a37f2 100644
 --- a/src/main/java/org/bukkit/craftbukkit/util/CraftMagicNumbers.java
 +++ b/src/main/java/org/bukkit/craftbukkit/util/CraftMagicNumbers.java
 @@ -430,7 +430,7 @@ public final class CraftMagicNumbers implements UnsafeValues {
