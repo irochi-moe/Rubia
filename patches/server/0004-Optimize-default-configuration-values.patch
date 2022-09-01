@@ -1,7 +1,7 @@
 From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
 From: Irochi <me@irochi.moe>
 Date: Mon, 1 Aug 2022 20:03:02 +0900
-Subject: [PATCH] Optimization
+Subject: [PATCH] Optimize default configuration values
 
 Thanks to YouHaveTrouble at https://github.com/YouHaveTrouble/minecraft-optimization
 
@@ -19,7 +19,7 @@ index 456595e4b7e0c7f50617aa2694b0d2dfc368ab81..a2bb3f185d89a4a8ec52c5712e094a8d
          public String url = "https://timings.aikar.co/";
          public boolean serverNamePrivacy = false;
 diff --git a/src/main/java/io/papermc/paper/configuration/WorldConfiguration.java b/src/main/java/io/papermc/paper/configuration/WorldConfiguration.java
-index e2c612dd55fcb2769fb06f7878b8d0873f2be139..43ca92b1aa6dec037026c51479926819f318bc66 100644
+index e2c612dd55fcb2769fb06f7878b8d0873f2be139..d9b5df7ea9953e22a21b66f8fd03e84d280e8b3d 100644
 --- a/src/main/java/io/papermc/paper/configuration/WorldConfiguration.java
 +++ b/src/main/java/io/papermc/paper/configuration/WorldConfiguration.java
 @@ -81,16 +81,18 @@ public class WorldConfiguration extends ConfigurationPart {
@@ -214,15 +214,15 @@ index e2c612dd55fcb2769fb06f7878b8d0873f2be139..43ca92b1aa6dec037026c51479926819
 -        public Table<EntityType<?>, String, Integer> behavior = Util.make(HashBasedTable.create(), table -> table.put(EntityType.VILLAGER, "validatenearbypoi", -1));
 +        public int mobSpawner = 2;
 +        public Table<EntityType<?>, String, Integer> sensor = Util.make(HashBasedTable.create(), table -> {
-+        table.put(EntityType.VILLAGER, "secondarypoisensor", 80);
-+        table.put(EntityType.VILLAGER, "nearestbedsensor", 80);
-+        table.put(EntityType.VILLAGER, "villagerbabiessensor", 40);
-+        table.put(EntityType.VILLAGER, "playersensor", 40);
-+        table.put(EntityType.VILLAGER, "nearestlivingentitysensor", 40);
++            table.put(EntityType.VILLAGER, "secondarypoisensor", 80);
++            table.put(EntityType.VILLAGER, "nearestbedsensor", 80);
++            table.put(EntityType.VILLAGER, "villagerbabiessensor", 40);
++            table.put(EntityType.VILLAGER, "playersensor", 40);
++            table.put(EntityType.VILLAGER, "nearestlivingentitysensor", 40);
 +        });
 +        public Table<EntityType<?>, String, Integer> behavior = Util.make(HashBasedTable.create(), table -> {
-+        table.put(EntityType.VILLAGER, "validatenearbypoi", 60);
-+        table.put(EntityType.VILLAGER, "acquirepoi", 120);
++            table.put(EntityType.VILLAGER, "validatenearbypoi", 60);
++            table.put(EntityType.VILLAGER, "acquirepoi", 120);
 +        });
 +        // Rubia end
      }
@@ -289,7 +289,7 @@ index a32cfa75a9bea896f558bab646d0868391b069a9..4239f601a49b434b4ca8d23b3892df43
          this.broadcastRconToOps = this.get("broadcast-rcon-to-ops", true);
          this.broadcastConsoleToOps = this.get("broadcast-console-to-ops", true);
 diff --git a/src/main/java/org/spigotmc/SpigotWorldConfig.java b/src/main/java/org/spigotmc/SpigotWorldConfig.java
-index bbf15fbb889670e57bd86377590a1b3abe80b96d..b83985751f05a53f9114fe12b9eda3369fd4734f 100644
+index bbf15fbb889670e57bd86377590a1b3abe80b96d..0fd153443eba47892629b36f3d0e24605008e982 100644
 --- a/src/main/java/org/spigotmc/SpigotWorldConfig.java
 +++ b/src/main/java/org/spigotmc/SpigotWorldConfig.java
 @@ -150,14 +150,14 @@ public class SpigotWorldConfig
@@ -362,6 +362,15 @@ index bbf15fbb889670e57bd86377590a1b3abe80b96d..b83985751f05a53f9114fe12b9eda336
          this.hopperAmount = this.getInt( "hopper-amount", 1 );
          this.hopperCanLoadChunks = this.getBoolean( "hopper-can-load-chunks", false );
          this.log( "Hopper Transfer: " + this.hopperTransfer + " Hopper Check: " + this.hopperCheck + " Hopper Amount: " + this.hopperAmount + " Hopper Can Load Chunks: " + this.hopperCanLoadChunks );
+@@ -307,7 +309,7 @@ public class SpigotWorldConfig
+     public int tridentDespawnRate;
+     private void arrowDespawnRate()
+     {
+-        this.arrowDespawnRate = this.getInt( "arrow-despawn-rate", 1200 );
++        this.arrowDespawnRate = this.getInt( "arrow-despawn-rate", 300 ); // Rubia
+         this.tridentDespawnRate = this.getInt( "trident-despawn-rate", this.arrowDespawnRate );
+         this.log( "Arrow Despawn Rate: " + this.arrowDespawnRate + " Trident Respawn Rate:" + this.tridentDespawnRate );
+     }
 @@ -322,7 +324,7 @@ public class SpigotWorldConfig
      public boolean nerfSpawnerMobs;
      private void nerfSpawnerMobs()
@@ -372,10 +381,17 @@ index bbf15fbb889670e57bd86377590a1b3abe80b96d..b83985751f05a53f9114fe12b9eda336
      }
  
 diff --git a/src/main/resources/configurations/bukkit.yml b/src/main/resources/configurations/bukkit.yml
-index eef7c125b2689f29cae5464659eacdf33f5695b2..91e4f942000d1a3cd99fc9862136ac32a5ded628 100644
+index eef7c125b2689f29cae5464659eacdf33f5695b2..a03486d0f1e30264f1f64d711e2c9769a03c88ca 100644
 --- a/src/main/resources/configurations/bukkit.yml
 +++ b/src/main/resources/configurations/bukkit.yml
-@@ -24,22 +24,22 @@ settings:
+@@ -18,28 +18,28 @@ settings:
+     update-folder: update
+     plugin-profiling: false
+     connection-throttle: 4000
+-    query-plugins: true
++    query-plugins: false
+     deprecated-verbose: default
+     shutdown-message: Server closed
      minimum-api: none
      use-map-color-cache: true
  spawn-limits:
@@ -411,3 +427,13 @@ index eef7c125b2689f29cae5464659eacdf33f5695b2..91e4f942000d1a3cd99fc9862136ac32
 +    ambient-spawns: 400
      autosave: 6000
  aliases: now-in-commands.yml
+diff --git a/src/main/resources/configurations/commands.yml b/src/main/resources/configurations/commands.yml
+index 18f54571200e2eca09a39b88f170fe7b99d8618f..1b57d51d92c5c69286800d10baeaa936fa208cae 100644
+--- a/src/main/resources/configurations/commands.yml
++++ b/src/main/resources/configurations/commands.yml
+@@ -12,5 +12,3 @@
+ command-block-overrides: []
+ ignore-vanilla-permissions: false
+ aliases:
+-    icanhasbukkit:
+-      - "version $1-"
