@@ -1,0 +1,567 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: Irochi <me@irochi.moe>
+Date: Mon, 1 Aug 2022 22:58:11 +0900
+Subject: [PATCH] Implement TPSBar
+
+Original by PurpurMC Team
+
+Copyright (C) 2022 PurpurMC LLC
+
+Permission is hereby granted, free of charge, to any person obtaining a
+copy of this software and associated documentation files (the
+Software), to deal in the Software without restriction, including
+without limitation the rights to use, copy, modify, merge, publish,
+distribute, sublicense, and/or sell copies of the Software, and to
+permit persons to whom the Software is furnished to do so, subject to
+the following conditions:
+
+The above copyright notice and this permission notice shall be included
+in all copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED AS IS, WITHOUT WARRANTY OF ANY KIND, EXPRESS
+OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
+IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY
+CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT,
+TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
+SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+
+diff --git a/src/main/java/moe/irochi/rubia/command/TPSBarCommand.java b/src/main/java/moe/irochi/rubia/command/TPSBarCommand.java
+new file mode 100644
+index 0000000000000000000000000000000000000000..b64ecc3de6bd63596c196b970458838e03b93769
+--- /dev/null
++++ b/src/main/java/moe/irochi/rubia/command/TPSBarCommand.java
+@@ -0,0 +1,41 @@
++package moe.irochi.rubia.command;
++
++import com.mojang.brigadier.CommandDispatcher;
++import io.papermc.paper.adventure.PaperAdventure;
++import net.kyori.adventure.text.Component;
++import net.kyori.adventure.text.format.NamedTextColor;
++import net.kyori.adventure.text.minimessage.MiniMessage;
++import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder;
++import net.minecraft.commands.CommandSourceStack;
++import net.minecraft.commands.Commands;
++import net.minecraft.commands.arguments.EntityArgument;
++import net.minecraft.server.level.ServerPlayer;
++import moe.irochi.rubia.task.TPSBarTask;
++import org.jetbrains.annotations.NotNull;
++
++import java.util.Collection;
++import java.util.Collections;
++
++public class TPSBarCommand {
++    public static void register(@NotNull CommandDispatcher<CommandSourceStack> dispatcher) {
++        dispatcher.register(Commands.literal("tpsbar")
++            .requires(listener -> listener.hasPermission(2, "bukkit.command.tpsbar"))
++            .executes(context -> execute(context.getSource(), Collections.singleton(context.getSource().getPlayerOrException())))
++            .then(Commands.argument("targets", EntityArgument.players()).executes((context) -> execute(context.getSource(), EntityArgument.getPlayers(context, "targets"))))
++        );
++    }
++
++    private static int execute(CommandSourceStack sender, @NotNull Collection<ServerPlayer> targets) {
++        for (ServerPlayer player : targets) {
++            boolean result = TPSBarTask.instance().togglePlayer(player.getBukkitEntity());
++            player.tpsBar(result);
++
++            sender.sendSuccess(PaperAdventure.asVanilla(MiniMessage.miniMessage().deserialize(
++                "<gray>TPSBar toggled</gray> <toggle> <gray>for</gray> <yellow><target></yellow><gray>.</gray>",
++                Placeholder.component("toggle", Component.translatable(result ? "options.on" : "options.off").color(result ? NamedTextColor.GREEN : NamedTextColor.RED)),
++                Placeholder.parsed("target", player.getGameProfile().getName())
++            )), false);
++        }
++    return targets.size();
++    }
++}
+diff --git a/src/main/java/moe/irochi/rubia/task/BossBarTask.java b/src/main/java/moe/irochi/rubia/task/BossBarTask.java
+new file mode 100644
+index 0000000000000000000000000000000000000000..3f5025755cc3aa1c852965c619390a3ed84683e5
+--- /dev/null
++++ b/src/main/java/moe/irochi/rubia/task/BossBarTask.java
+@@ -0,0 +1,109 @@
++package moe.irochi.rubia.task;
++
++import net.kyori.adventure.bossbar.BossBar;
++import net.minecraft.server.level.ServerPlayer;
++import org.bukkit.Bukkit;
++import org.bukkit.craftbukkit.scheduler.MinecraftInternalPlugin;
++import org.bukkit.entity.Player;
++import org.bukkit.scheduler.BukkitRunnable;
++
++import java.util.HashMap;
++import java.util.HashSet;
++import java.util.Iterator;
++import java.util.Map;
++import java.util.UUID;
++
++public abstract class BossBarTask extends BukkitRunnable {
++    private final Map<UUID, BossBar> bossbars = new HashMap<>();
++    private boolean started;
++
++    abstract BossBar createBossBar();
++
++    abstract void updateBossBar(BossBar bossbar, Player player);
++
++    @Override
++    public void run() {
++        Iterator<Map.Entry<UUID, BossBar>> iter = bossbars.entrySet().iterator();
++        while (iter.hasNext()) {
++            Map.Entry<UUID, BossBar> entry = iter.next();
++            Player player = Bukkit.getPlayer(entry.getKey());
++            if (player == null) {
++                iter.remove();
++                continue;
++            }
++            updateBossBar(entry.getValue(), player);
++        }
++    }
++
++    @Override
++    public void cancel() {
++        super.cancel();
++        new HashSet<>(this.bossbars.keySet()).forEach(uuid -> {
++            Player player = Bukkit.getPlayer(uuid);
++            if (player != null) {
++                removePlayer(player);
++            }
++        });
++        this.bossbars.clear();
++    }
++
++    public boolean removePlayer(Player player) {
++        BossBar bossbar = this.bossbars.remove(player.getUniqueId());
++        if (bossbar != null) {
++            player.hideBossBar(bossbar);
++            return true;
++        }
++        return false;
++    }
++
++    public void addPlayer(Player player) {
++        removePlayer(player);
++        BossBar bossbar = createBossBar();
++        this.bossbars.put(player.getUniqueId(), bossbar);
++        this.updateBossBar(bossbar, player);
++        player.showBossBar(bossbar);
++    }
++
++    public boolean hasPlayer(UUID uuid) {
++        return this.bossbars.containsKey(uuid);
++    }
++
++    public boolean togglePlayer(Player player) {
++        if (removePlayer(player)) {
++            return false;
++        }
++        addPlayer(player);
++        return true;
++    }
++
++    public void start() {
++        stop();
++        this.runTaskTimerAsynchronously(new MinecraftInternalPlugin(), 1, 1);
++        started = true;
++    }
++
++    public void stop() {
++        if (started) {
++            cancel();
++        }
++    }
++
++    public static void startAll() {
++        TPSBarTask.instance().start();
++    }
++
++    public static void stopAll() {
++        TPSBarTask.instance().stop();
++    }
++
++    public static void addToAll(ServerPlayer player) {
++        Player bukkit = player.getBukkitEntity();
++        if (player.tpsBar()) {
++            TPSBarTask.instance().addPlayer(bukkit);
++        }
++    }
++
++    public static void removeFromAll(Player player) {
++        TPSBarTask.instance().removePlayer(player);
++    }
++}
+diff --git a/src/main/java/moe/irochi/rubia/task/TPSBarTask.java b/src/main/java/moe/irochi/rubia/task/TPSBarTask.java
+new file mode 100644
+index 0000000000000000000000000000000000000000..ecea808bd28f6f73a41a5966c93a92eaf23bd03f
+--- /dev/null
++++ b/src/main/java/moe/irochi/rubia/task/TPSBarTask.java
+@@ -0,0 +1,152 @@
++package moe.irochi.rubia.task;
++
++import net.kyori.adventure.bossbar.BossBar;
++import net.kyori.adventure.text.Component;
++import net.kyori.adventure.text.minimessage.MiniMessage;
++import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder;
++import org.bukkit.Bukkit;
++import org.bukkit.entity.Player;
++
++public class TPSBarTask extends BossBarTask {
++    private static TPSBarTask instance;
++    private double tps = 20.0D;
++    private double mspt = 0.0D;
++    private int tick = 0;
++
++    public static BossBar.Overlay commandTPSBarProgressOverlay = BossBar.Overlay.NOTCHED_20;
++    public static String commandTPSBarTitle = "<gray>TPS<yellow>:</yellow> <tps> MSPT<yellow>:</yellow> <mspt> Ping<yellow>:</yellow> <ping>ms";
++    public static int commandTPSBarTickInterval = 20;
++    public static TPSBarTask.FillMode commandTPSBarProgressFillMode = TPSBarTask.FillMode.MSPT;
++    public static BossBar.Color commandTPSBarProgressColorGood = BossBar.Color.GREEN;
++    public static BossBar.Color commandTPSBarProgressColorMedium = BossBar.Color.YELLOW;
++    public static BossBar.Color commandTPSBarProgressColorLow = BossBar.Color.RED;
++    public static String commandTPSBarTextColorGood = "<gradient:#55ff55:#00aa00><text></gradient>";
++    public static String commandTPSBarTextColorMedium = "<gradient:#ffff55:#ffaa00><text></gradient>";
++    public static String commandTPSBarTextColorLow = "<gradient:#ff5555:#aa0000><text></gradient>";
++
++    public static TPSBarTask instance() {
++        if (instance == null) {
++            instance = new TPSBarTask();
++        }
++        return instance;
++    }
++
++    @Override
++    BossBar createBossBar() {
++        return BossBar.bossBar(Component.text(""), 0.0F, instance().getBossBarColor(), commandTPSBarProgressOverlay);
++    }
++
++    @Override
++    void updateBossBar(BossBar bossbar, Player player) {
++        bossbar.progress(getBossBarProgress());
++        bossbar.color(getBossBarColor());
++        bossbar.name(MiniMessage.miniMessage().deserialize(commandTPSBarTitle,
++                Placeholder.component("tps", getTPSColor()),
++                Placeholder.component("mspt", getMSPTColor()),
++                Placeholder.component("ping", getPingColor(player.getPing()))
++        ));
++    }
++
++    @Override
++    public void run() {
++        if (++tick < commandTPSBarTickInterval) {
++            return;
++        }
++        tick = 0;
++
++        this.tps = Math.max(Math.min(Bukkit.getTPS()[0], 20.0D), 0.0D);
++        this.mspt = Bukkit.getAverageTickTime();
++
++        super.run();
++    }
++
++    private float getBossBarProgress() {
++        if (commandTPSBarProgressFillMode == FillMode.MSPT) {
++            return Math.max(Math.min((float) mspt / 50.0F, 1.0F), 0.0F);
++        } else {
++            return Math.max(Math.min((float) tps / 20.0F, 1.0F), 0.0F);
++        }
++    }
++
++    private BossBar.Color getBossBarColor() {
++        if (isGood(commandTPSBarProgressFillMode)) {
++            return commandTPSBarProgressColorGood;
++        } else if (isMedium(commandTPSBarProgressFillMode)) {
++            return commandTPSBarProgressColorMedium;
++        } else {
++            return commandTPSBarProgressColorLow;
++        }
++    }
++
++    private boolean isGood(FillMode mode) {
++        return isGood(mode, 0);
++    }
++
++    private boolean isGood(FillMode mode, int ping) {
++        if (mode == FillMode.MSPT) {
++            return mspt < 40;
++        } else if (mode == FillMode.TPS) {
++            return tps >= 19;
++        } else if (mode == FillMode.PING) {
++            return ping < 100;
++        } else {
++            return false;
++        }
++    }
++
++    private boolean isMedium(FillMode mode) {
++        return isMedium(mode, 0);
++    }
++
++    private boolean isMedium(FillMode mode, int ping) {
++        if (mode == FillMode.MSPT) {
++            return mspt < 50;
++        } else if (mode == FillMode.TPS) {
++            return tps >= 15;
++        } else if (mode == FillMode.PING) {
++            return ping < 200;
++        } else {
++            return false;
++        }
++    }
++
++    private Component getTPSColor() {
++        String color;
++        if (isGood(FillMode.TPS)) {
++            color = commandTPSBarTextColorGood;
++        } else if (isMedium(FillMode.TPS)) {
++            color = commandTPSBarTextColorMedium;
++        } else {
++            color = commandTPSBarTextColorLow;
++        }
++        return MiniMessage.miniMessage().deserialize(color, Placeholder.parsed("text", String.format("%.2f", tps)));
++    }
++
++    private Component getMSPTColor() {
++        String color;
++        if (isGood(FillMode.MSPT)) {
++            color = commandTPSBarTextColorGood;
++        } else if (isMedium(FillMode.MSPT)) {
++            color = commandTPSBarTextColorMedium;
++        } else {
++            color = commandTPSBarTextColorLow;
++        }
++        return MiniMessage.miniMessage().deserialize(color, Placeholder.parsed("text", String.format("%.2f", mspt)));
++    }
++
++    private Component getPingColor(int ping) {
++        String color;
++        if (isGood(FillMode.PING, ping)) {
++            color = commandTPSBarTextColorGood;
++        } else if (isMedium(FillMode.PING, ping)) {
++            color = commandTPSBarTextColorMedium;
++        } else {
++            color = commandTPSBarTextColorLow;
++        }
++        return MiniMessage.miniMessage().deserialize(color, Placeholder.parsed("text", String.format("%s", ping)));
++    }
++
++    public enum FillMode {
++        TPS, MSPT, PING
++    }
++}
+diff --git a/src/main/java/net/minecraft/commands/Commands.java b/src/main/java/net/minecraft/commands/Commands.java
+index 7c96f7fc5997761426a0c62cad0cab5cc668f282..058ad465d0255c20fdcc32c7284907f91cb1ea1f 100644
+--- a/src/main/java/net/minecraft/commands/Commands.java
++++ b/src/main/java/net/minecraft/commands/Commands.java
+@@ -207,6 +207,7 @@ public class Commands {
+             SetPlayerIdleTimeoutCommand.register(this.dispatcher);
+             StopCommand.register(this.dispatcher);
+             WhitelistCommand.register(this.dispatcher);
++            moe.irochi.rubia.command.TPSBarCommand.register(this.dispatcher); // Rubia
+         }
+ 
+         if (environment.includeIntegrated) {
+diff --git a/src/main/java/net/minecraft/server/MinecraftServer.java b/src/main/java/net/minecraft/server/MinecraftServer.java
+index 18e27feca3c07e5ea6849fe9634b9694cf84b3e3..0d04320171c479f192f8699d550243b4132b27bc 100644
+--- a/src/main/java/net/minecraft/server/MinecraftServer.java
++++ b/src/main/java/net/minecraft/server/MinecraftServer.java
+@@ -182,6 +182,8 @@ import org.bukkit.event.server.ServerLoadEvent;
+ 
+ import co.aikar.timings.MinecraftTimings; // Paper
+ 
++import moe.irochi.rubia.task.BossBarTask; // Rubia
++
+ public abstract class MinecraftServer extends ReentrantBlockableEventLoop<TickTask> implements CommandSource, AutoCloseable {
+ 
+     private static MinecraftServer SERVER; // Paper
+@@ -1047,6 +1049,7 @@ public abstract class MinecraftServer extends ReentrantBlockableEventLoop<TickTa
+         this.safeShutdown(flag, false);
+     }
+     public void safeShutdown(boolean flag, boolean isRestarting) {
++        moe.irochi.rubia.task.BossBarTask.stopAll(); // Rubia
+         this.isRestarting = isRestarting;
+         this.hasLoggedStop = true; // Paper
+         if (isDebugging()) io.papermc.paper.util.TraceUtil.dumpTraceForThread("Server stopped"); // Paper
+diff --git a/src/main/java/net/minecraft/server/dedicated/DedicatedServer.java b/src/main/java/net/minecraft/server/dedicated/DedicatedServer.java
+index bdd6560fe85950b0a857a949cb38c044da44ca6b..b22c3631f30f634bff38ae07dc8096ad6611029f 100644
+--- a/src/main/java/net/minecraft/server/dedicated/DedicatedServer.java
++++ b/src/main/java/net/minecraft/server/dedicated/DedicatedServer.java
+@@ -69,6 +69,8 @@ import org.bukkit.craftbukkit.util.Waitable;
+ import org.bukkit.event.server.RemoteServerCommandEvent;
+ // CraftBukkit end
+ 
++import moe.irochi.rubia.task.BossBarTask; // Rubia
++
+ public class DedicatedServer extends MinecraftServer implements ServerInterface {
+ 
+     static final Logger LOGGER = LogUtils.getLogger();
+@@ -338,6 +340,7 @@ public class DedicatedServer extends MinecraftServer implements ServerInterface
+                 DedicatedServer.LOGGER.info("JMX monitoring enabled");
+             }
+ 
++            moe.irochi.rubia.task.BossBarTask.startAll(); // Rubia
+             return true;
+         }
+     }
+diff --git a/src/main/java/net/minecraft/server/level/ServerPlayer.java b/src/main/java/net/minecraft/server/level/ServerPlayer.java
+index 3615576c24d5d6790a6894a91180de25fa0e5a9c..a03a55cda4555da92527f653002fbcccff919721 100644
+--- a/src/main/java/net/minecraft/server/level/ServerPlayer.java
++++ b/src/main/java/net/minecraft/server/level/ServerPlayer.java
+@@ -262,6 +262,7 @@ public class ServerPlayer extends Player {
+     public Integer clientViewDistance;
+     // CraftBukkit end
+     public PlayerNaturallySpawnCreaturesEvent playerNaturallySpawnedEvent; // Paper
++    private boolean tpsBar = false; // Rubia
+ 
+     public double lastEntitySpawnRadiusSquared; // Paper - optimise isOutsideRange, this field is in blocks
+     public final com.destroystokyo.paper.util.misc.PooledLinkedHashSets.PooledObjectLinkedOpenHashSet<ServerPlayer> cachedSingleHashSet; // Paper
+@@ -482,6 +483,7 @@ public class ServerPlayer extends Player {
+             }
+         }
+ 
++        if (nbt.contains("Rubia.TPSBar")) { this.tpsBar = nbt.getBoolean("Rubia.TPSBar"); } // Rubia
+     }
+ 
+     @Override
+@@ -542,6 +544,7 @@ public class ServerPlayer extends Player {
+         }
+         this.getBukkitEntity().setExtraData(nbt); // CraftBukkit
+ 
++        nbt.putBoolean("Rubia.TPSBar", this.tpsBar); // Rubia
+     }
+ 
+     // CraftBukkit start - World fallback code, either respawn location or global spawn
+@@ -2484,4 +2487,14 @@ public class ServerPlayer extends Player {
+     // CraftBukkit end
+ 
+     public final int getViewDistance() { throw new UnsupportedOperationException("Use PlayerChunkLoader"); } // Paper - placeholder
++
++    // Rubia start
++    public boolean tpsBar() {
++        return this.tpsBar;
++    }
++
++    public void tpsBar(boolean tpsBar) {
++        this.tpsBar = tpsBar;
++    }
++    // Rubia end
+ }
+diff --git a/src/main/java/net/minecraft/server/players/PlayerList.java b/src/main/java/net/minecraft/server/players/PlayerList.java
+index e1b6017953edffcea0be81b70cf7b22ce8c0570d..77efce8fc0022af9201131e8f4fd3d6e78b9ac0d 100644
+--- a/src/main/java/net/minecraft/server/players/PlayerList.java
++++ b/src/main/java/net/minecraft/server/players/PlayerList.java
+@@ -122,6 +122,8 @@ import org.bukkit.event.player.PlayerQuitEvent;
+ import org.bukkit.event.player.PlayerRespawnEvent;
+ // CraftBukkit end
+ 
++import moe.irochi.rubia.task.BossBarTask; // Rubia
++
+ public abstract class PlayerList {
+ 
+     public static final File USERBANLIST_FILE = new File("banned-players.json");
+@@ -506,6 +508,7 @@ public abstract class PlayerList {
+             scoreboard.addPlayerToTeam(player.getScoreboardName(), collideRuleTeam);
+         }
+         // Paper end
++        moe.irochi.rubia.task.BossBarTask.addToAll(player); // Rubia
+         // CraftBukkit - Moved from above, added world
+         PlayerList.LOGGER.info("{}[{}] logged in with entity id {} at ([{}]{}, {}, {})", player.getName().getString(), s1, player.getId(), worldserver1.serverLevelData.getLevelName(), player.getX(), player.getY(), player.getZ());
+     }
+@@ -616,6 +619,8 @@ public abstract class PlayerList {
+     }
+     public net.kyori.adventure.text.Component remove(ServerPlayer entityplayer, net.kyori.adventure.text.Component leaveMessage) {
+         // Paper end
++        moe.irochi.rubia.task.BossBarTask.removeFromAll(entityplayer.getBukkitEntity()); // Rubia
++
+         ServerLevel worldserver = entityplayer.getLevel();
+ 
+         entityplayer.awardStat(Stats.LEAVE_GAME);
+diff --git a/src/test/java/io/papermc/paper/permissions/MinecraftCommandPermissionsTest.java b/src/test/java/io/papermc/paper/permissions/MinecraftCommandPermissionsTest.java
+deleted file mode 100644
+index da2eb57ea64403657744ea00eff40243ef51df58..0000000000000000000000000000000000000000
+--- a/src/test/java/io/papermc/paper/permissions/MinecraftCommandPermissionsTest.java
++++ /dev/null
+@@ -1,86 +0,0 @@
+-package io.papermc.paper.permissions;
+-
+-import com.mojang.brigadier.tree.CommandNode;
+-import com.mojang.brigadier.tree.RootCommandNode;
+-import net.minecraft.commands.CommandBuildContext;
+-import net.minecraft.commands.CommandSourceStack;
+-import net.minecraft.commands.Commands;
+-import net.minecraft.core.RegistryAccess;
+-import net.minecraft.server.Bootstrap;
+-import org.bukkit.Bukkit;
+-import org.bukkit.craftbukkit.command.VanillaCommandWrapper;
+-import org.bukkit.craftbukkit.util.permissions.CraftDefaultPermissions;
+-import org.bukkit.permissions.Permission;
+-import org.bukkit.support.AbstractTestingBase;
+-import org.junit.AfterClass;
+-import org.junit.BeforeClass;
+-import org.junit.Test;
+-
+-import java.io.PrintStream;
+-import java.util.HashSet;
+-import java.util.LinkedHashSet;
+-import java.util.List;
+-import java.util.Set;
+-import java.util.TreeSet;
+-
+-import static org.junit.Assert.assertTrue;
+-
+-public class MinecraftCommandPermissionsTest extends AbstractTestingBase {
+-
+-    private static PrintStream old;
+-    @BeforeClass
+-    public static void before() {
+-        old = System.out;
+-        System.setOut(Bootstrap.STDOUT);
+-    }
+-
+-    @Test
+-    public void test() {
+-        CraftDefaultPermissions.registerCorePermissions();
+-        Set<String> perms = collectMinecraftCommandPerms();
+-
+-        Commands commands = new Commands(Commands.CommandSelection.DEDICATED, new CommandBuildContext(RegistryAccess.BUILTIN.get()));
+-        RootCommandNode<CommandSourceStack> root = commands.getDispatcher().getRoot();
+-        Set<String> missing = new LinkedHashSet<>();
+-        Set<String> foundPerms = new HashSet<>();
+-        for (CommandNode<CommandSourceStack> child : root.getChildren()) {
+-            final String vanillaPerm = VanillaCommandWrapper.getPermission(child);
+-            if (!perms.contains(vanillaPerm)) {
+-                missing.add("Missing permission for " + child.getName() + " (" + vanillaPerm + ") command");
+-            } else {
+-                foundPerms.add(vanillaPerm);
+-            }
+-        }
+-        assertTrue("Commands missing permissions: \n" + String.join("\n", missing), missing.isEmpty());
+-        perms.removeAll(foundPerms);
+-        assertTrue("Extra permissions not associated with a command: \n" + String.join("\n", perms), perms.isEmpty());
+-    }
+-
+-    private static final List<String> TO_SKIP = List.of(
+-        "minecraft.command.selector"
+-    );
+-
+-    private static Set<String> collectMinecraftCommandPerms() {
+-        Set<String> perms = new TreeSet<>();
+-        for (Permission perm : Bukkit.getPluginManager().getPermissions()) {
+-            if (perm.getName().startsWith("minecraft.command.")) {
+-                if (TO_SKIP.contains(perm.getName())) {
+-                    continue;
+-                }
+-                if (perm.getName().endsWith(".xp")) {
+-                    perms.add("minecraft.command.experience"); // for the "experience" command, craftbukkit perm is "minecraft.command.xp"
+-                    continue;
+-                }
+-                perms.add(perm.getName());
+-            }
+-        }
+-        return perms;
+-    }
+-
+-    @AfterClass
+-    public static void after() {
+-        if (old != null) {
+-            System.setOut(old);
+-        }
+-    }
+-}
