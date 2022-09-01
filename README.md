@@ -1,4 +1,45 @@
-## Rubia
-[Paper](https://github.com/PaperMC/Paper) fork for for Irochi, cuz its cool⚡
+<div align="center">
+  <h1><b>Rubia</b></h1>
+  <h3>Personal Paper fork by Irochi</h3>
+  <h4><b>This is for personal usage and you might get no support from me. Any contributions are welcome!</b></h4>
 
-**For more information, please visit [official project page](https://mc.irochi.moe/Rubia)**
+[![Watchers](https://img.shields.io/github/watchers/IrochiMC/Rubia?style=for-the-badge)](https://github.com/IrochiMC/Rubia/network/members)
+[![Forks](https://img.shields.io/github/forks/IrochiMC/Rubia?style=for-the-badge)](https://github.com/IrochiMC/Rubia/network/members)
+[![Stars](https://img.shields.io/github/stars/IrochiMC/Rubia?style=for-the-badge)](https://github.com/IrochiMC/Rubia/stargazers)
+
+[![Discord](<https://img.shields.io/discord/883670043404173352?color=5865F2&label=discord(not_ready)&style=for-the-badge>)](https://irochi.moe)
+
+</div>
+
+## Features
+
+- **Fork of [Paper](https://github.com/PaperMC/Paper)** that many developer use and recommends.
+- **Contains [Pufferfish](https://github.com/pufferfish-gg/Pufferfish) and [Purpur](https://github.com/PurpurMC/Purpur) patches** for various features.
+- **Pre-configured** optimization values by [YouHaveTrouble](https://github.com/YouHaveTrouble/minecraft-optimization)
+- **More cool things** that something personal xD
+
+## Downloads
+
+All of Rubia builds can be downloaded in [Release section](https://github.com/IrochiMC/Rubia/releases)
+
+**Make sure you have Java version 17 or higher.**
+
+## Build
+
+If you want to build and get your own jar file, follow these commands and get jar file in `build/libs` directory:
+
+```bash
+./gradlew applyPatches
+./gradlew build
+./gradlew createReobfPaperlipJar
+```
+
+## API
+
+Rubia doesn't have API yet. therefore dont have to get maven repository and etcs.
+
+## License
+
+Since Rubia is fork of PaperMC's project, all files are licensed under GPL-3.0.
+
+Some of patches might licensed under different variety. Each patch's licenses can be found at its own file.
