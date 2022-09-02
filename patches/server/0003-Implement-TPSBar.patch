@@ -444,7 +444,7 @@ index 3615576c24d5d6790a6894a91180de25fa0e5a9c..a03a55cda4555da92527f653002fbccc
 +    // Rubia end
  }
 diff --git a/src/main/java/net/minecraft/server/players/PlayerList.java b/src/main/java/net/minecraft/server/players/PlayerList.java
-index e1b6017953edffcea0be81b70cf7b22ce8c0570d..77efce8fc0022af9201131e8f4fd3d6e78b9ac0d 100644
+index 5999d85e38951503fc83b40cfe39671921ae5088..eeb70838d499f9dc2dea4ed4b172eff381f35508 100644
 --- a/src/main/java/net/minecraft/server/players/PlayerList.java
 +++ b/src/main/java/net/minecraft/server/players/PlayerList.java
 @@ -122,6 +122,8 @@ import org.bukkit.event.player.PlayerQuitEvent;
@@ -456,7 +456,7 @@ index e1b6017953edffcea0be81b70cf7b22ce8c0570d..77efce8fc0022af9201131e8f4fd3d6e
  public abstract class PlayerList {
  
      public static final File USERBANLIST_FILE = new File("banned-players.json");
-@@ -506,6 +508,7 @@ public abstract class PlayerList {
+@@ -503,6 +505,7 @@ public abstract class PlayerList {
              scoreboard.addPlayerToTeam(player.getScoreboardName(), collideRuleTeam);
          }
          // Paper end
@@ -464,7 +464,7 @@ index e1b6017953edffcea0be81b70cf7b22ce8c0570d..77efce8fc0022af9201131e8f4fd3d6e
          // CraftBukkit - Moved from above, added world
          PlayerList.LOGGER.info("{}[{}] logged in with entity id {} at ([{}]{}, {}, {})", player.getName().getString(), s1, player.getId(), worldserver1.serverLevelData.getLevelName(), player.getX(), player.getY(), player.getZ());
      }
-@@ -616,6 +619,8 @@ public abstract class PlayerList {
+@@ -613,6 +616,8 @@ public abstract class PlayerList {
      }
      public net.kyori.adventure.text.Component remove(ServerPlayer entityplayer, net.kyori.adventure.text.Component leaveMessage) {
          // Paper end
