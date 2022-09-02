@@ -265,7 +265,7 @@ index 6af307481a6752529d87869760945cb140d05bed..ed8eca03091c5d276755e38205460a75
                          }
                      }
 diff --git a/src/main/java/net/minecraft/server/dedicated/DedicatedServerProperties.java b/src/main/java/net/minecraft/server/dedicated/DedicatedServerProperties.java
-index a32cfa75a9bea896f558bab646d0868391b069a9..4239f601a49b434b4ca8d23b3892df43c66c151d 100644
+index 942ba3b9d7d5bf01dd82b03c557d3c8f427ac9c1..e4a220258b051a145872d766cf5dbcd1bd7f0412 100644
 --- a/src/main/java/net/minecraft/server/dedicated/DedicatedServerProperties.java
 +++ b/src/main/java/net/minecraft/server/dedicated/DedicatedServerProperties.java
 @@ -121,15 +121,15 @@ public class DedicatedServerProperties extends Settings<DedicatedServerPropertie

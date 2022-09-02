@@ -1,0 +1,19 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: Irochi <me@irochi.moe>
+Date: Fri, 2 Sep 2022 16:49:46 +0900
+Subject: [PATCH] Disable enfore secure profile
+
+
+diff --git a/src/main/java/net/minecraft/server/dedicated/DedicatedServerProperties.java b/src/main/java/net/minecraft/server/dedicated/DedicatedServerProperties.java
+index a32cfa75a9bea896f558bab646d0868391b069a9..942ba3b9d7d5bf01dd82b03c557d3c8f427ac9c1 100644
+--- a/src/main/java/net/minecraft/server/dedicated/DedicatedServerProperties.java
++++ b/src/main/java/net/minecraft/server/dedicated/DedicatedServerProperties.java
+@@ -147,7 +147,7 @@ public class DedicatedServerProperties extends Settings<DedicatedServerPropertie
+         this.previewsChat = this.get("previews-chat", false);
+         this.playerIdleTimeout = this.getMutable("player-idle-timeout", 0);
+         this.whiteList = this.getMutable("white-list", false);
+-        this.enforceSecureProfile = this.get("enforce-secure-profile", true);
++        this.enforceSecureProfile = this.get("enforce-secure-profile", false); // Rubia
+         this.worldGenProperties = new DedicatedServerProperties.WorldGenProperties(this.get("level-seed", ""), (JsonObject) this.get("generator-settings", (s) -> {
+             return GsonHelper.parse(!s.isEmpty() ? s : "{}");
+         }, new JsonObject()), this.get("generate-structures", true), (String) this.get("level-type", (s) -> {
