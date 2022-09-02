@@ -3,7 +3,7 @@
   <h3>Personal Paper fork by Irochi</h3>
   <h4><b>This is for personal usage and you might get no support from me. Any contributions are welcome!</b></h4>
 
-[![Watchers](https://img.shields.io/github/watchers/IrochiMC/Rubia?style=for-the-badge)](https://github.com/IrochiMC/Rubia/network/members)
+[![Watchers](https://img.shields.io/github/watchers/IrochiMC/Rubia?style=for-the-badge)](https://github.com/IrochiMC/Rubia/watchers)
 [![Forks](https://img.shields.io/github/forks/IrochiMC/Rubia?style=for-the-badge)](https://github.com/IrochiMC/Rubia/network/members)
 [![Stars](https://img.shields.io/github/stars/IrochiMC/Rubia?style=for-the-badge)](https://github.com/IrochiMC/Rubia/stargazers)
 
