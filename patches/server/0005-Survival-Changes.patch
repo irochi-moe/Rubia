@@ -31,10 +31,10 @@ TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
 SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 diff --git a/src/main/java/net/minecraft/world/entity/Mob.java b/src/main/java/net/minecraft/world/entity/Mob.java
-index 3646b969fa51b9683ab4137e530c3a6f6fc6c465..3dbae312fe1a340e686da53cc6f90e97d303e9ff 100644
+index 557e90e54439ce0430075403392b5052d5181feb..82cac4367211962507a0f06ba148e80702515ef1 100644
 --- a/src/main/java/net/minecraft/world/entity/Mob.java
 +++ b/src/main/java/net/minecraft/world/entity/Mob.java
-@@ -1246,6 +1246,7 @@ public abstract class Mob extends LivingEntity {
+@@ -1252,6 +1252,7 @@ public abstract class Mob extends LivingEntity {
          if (!this.isAlive()) {
              return InteractionResult.PASS;
          } else if (this.getLeashHolder() == player) {
