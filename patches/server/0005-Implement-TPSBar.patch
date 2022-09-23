@@ -359,7 +359,7 @@ index 7c96f7fc5997761426a0c62cad0cab5cc668f282..058ad465d0255c20fdcc32c7284907f9
  
          if (environment.includeIntegrated) {
 diff --git a/src/main/java/net/minecraft/server/MinecraftServer.java b/src/main/java/net/minecraft/server/MinecraftServer.java
-index 18e27feca3c07e5ea6849fe9634b9694cf84b3e3..0d04320171c479f192f8699d550243b4132b27bc 100644
+index da9191e437d554036353103c698abed3b2a022dd..80a4eb305f10ec8463905b72839a71663110996e 100644
 --- a/src/main/java/net/minecraft/server/MinecraftServer.java
 +++ b/src/main/java/net/minecraft/server/MinecraftServer.java
 @@ -182,6 +182,8 @@ import org.bukkit.event.server.ServerLoadEvent;
@@ -371,7 +371,7 @@ index 18e27feca3c07e5ea6849fe9634b9694cf84b3e3..0d04320171c479f192f8699d550243b4
  public abstract class MinecraftServer extends ReentrantBlockableEventLoop<TickTask> implements CommandSource, AutoCloseable {
  
      private static MinecraftServer SERVER; // Paper
-@@ -1047,6 +1049,7 @@ public abstract class MinecraftServer extends ReentrantBlockableEventLoop<TickTa
+@@ -1049,6 +1051,7 @@ public abstract class MinecraftServer extends ReentrantBlockableEventLoop<TickTa
          this.safeShutdown(flag, false);
      }
      public void safeShutdown(boolean flag, boolean isRestarting) {
@@ -380,7 +380,7 @@ index 18e27feca3c07e5ea6849fe9634b9694cf84b3e3..0d04320171c479f192f8699d550243b4
          this.hasLoggedStop = true; // Paper
          if (isDebugging()) io.papermc.paper.util.TraceUtil.dumpTraceForThread("Server stopped"); // Paper
 diff --git a/src/main/java/net/minecraft/server/dedicated/DedicatedServer.java b/src/main/java/net/minecraft/server/dedicated/DedicatedServer.java
-index bdd6560fe85950b0a857a949cb38c044da44ca6b..b22c3631f30f634bff38ae07dc8096ad6611029f 100644
+index 519883c5549744e047a8a96afee142746fcb49cd..34cf65fa292a6a8d2a76aacbe99a351e7c90ccd2 100644
 --- a/src/main/java/net/minecraft/server/dedicated/DedicatedServer.java
 +++ b/src/main/java/net/minecraft/server/dedicated/DedicatedServer.java
 @@ -69,6 +69,8 @@ import org.bukkit.craftbukkit.util.Waitable;
@@ -392,10 +392,10 @@ index bdd6560fe85950b0a857a949cb38c044da44ca6b..b22c3631f30f634bff38ae07dc8096ad
  public class DedicatedServer extends MinecraftServer implements ServerInterface {
  
      static final Logger LOGGER = LogUtils.getLogger();
-@@ -338,6 +340,7 @@ public class DedicatedServer extends MinecraftServer implements ServerInterface
-                 DedicatedServer.LOGGER.info("JMX monitoring enabled");
+@@ -341,6 +343,7 @@ public class DedicatedServer extends MinecraftServer implements ServerInterface
              }
  
+             if (gg.pufferfish.pufferfish.PufferfishConfig.enableAsyncMobSpawning) mobSpawnExecutor.start(); // Pufferfish
 +            moe.irochi.rubia.task.BossBarTask.startAll(); // Rubia
              return true;
          }

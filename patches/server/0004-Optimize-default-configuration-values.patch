@@ -5,19 +5,6 @@ Subject: [PATCH] Optimize default configuration values
 
 Thanks to YouHaveTrouble at https://github.com/YouHaveTrouble/minecraft-optimization
 
-diff --git a/src/main/java/io/papermc/paper/configuration/GlobalConfiguration.java b/src/main/java/io/papermc/paper/configuration/GlobalConfiguration.java
-index 456595e4b7e0c7f50617aa2694b0d2dfc368ab81..a2bb3f185d89a4a8ec52c5712e094a8d47425de3 100644
---- a/src/main/java/io/papermc/paper/configuration/GlobalConfiguration.java
-+++ b/src/main/java/io/papermc/paper/configuration/GlobalConfiguration.java
-@@ -51,7 +51,7 @@ public class GlobalConfiguration extends ConfigurationPart {
-     public Timings timings;
- 
-     public class Timings extends ConfigurationPart.Post {
--        public boolean enabled = true;
-+        public boolean enabled = false; // Rubia
-         public boolean verbose = true;
-         public String url = "https://timings.aikar.co/";
-         public boolean serverNamePrivacy = false;
 diff --git a/src/main/java/io/papermc/paper/configuration/WorldConfiguration.java b/src/main/java/io/papermc/paper/configuration/WorldConfiguration.java
 index e2c612dd55fcb2769fb06f7878b8d0873f2be139..d9b5df7ea9953e22a21b66f8fd03e84d280e8b3d 100644
 --- a/src/main/java/io/papermc/paper/configuration/WorldConfiguration.java
