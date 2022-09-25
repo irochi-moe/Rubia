@@ -410,7 +410,7 @@ index abe37c7c3c6f5ab73afd738ec78f06d7e4d2ed96..a728593563d8ae93d516d6f496a6cf63
          stringbuilder.append(CrashReport.getErrorComment());
          stringbuilder.append("\n\n");
 diff --git a/src/main/java/net/minecraft/server/MinecraftServer.java b/src/main/java/net/minecraft/server/MinecraftServer.java
-index 92f685b1b6015cdd3e6c50fd39a79e2ad187fc91..da9191e437d554036353103c698abed3b2a022dd 100644
+index 67e150e35d328eb13c8f86e61dab2f11c76b21df..7f9ed9d4fb2840f66242b952ea510d2742a12d64 100644
 --- a/src/main/java/net/minecraft/server/MinecraftServer.java
 +++ b/src/main/java/net/minecraft/server/MinecraftServer.java
 @@ -913,7 +913,7 @@ public abstract class MinecraftServer extends ReentrantBlockableEventLoop<TickTa
@@ -422,7 +422,7 @@ index 92f685b1b6015cdd3e6c50fd39a79e2ad187fc91..da9191e437d554036353103c698abed3
              while (this.getRunningThread().isAlive()) {
                  this.getRunningThread().stop();
                  try {
-@@ -1675,7 +1675,7 @@ public abstract class MinecraftServer extends ReentrantBlockableEventLoop<TickTa
+@@ -1676,7 +1676,7 @@ public abstract class MinecraftServer extends ReentrantBlockableEventLoop<TickTa
  
      @DontObfuscate
      public String getServerModName() {
@@ -445,7 +445,7 @@ index c2356ed1a00fd8087cca285be5e7f6a5442e73fb..fc32a11e9c18f0a910ef519c817dd150
  
      private static final int DEFAULT_SIZE_THRESHOLD = 1024 * 8;
 diff --git a/src/main/java/org/bukkit/craftbukkit/CraftServer.java b/src/main/java/org/bukkit/craftbukkit/CraftServer.java
-index 660d3f6e8a59751aa1d5b71f5bab72254b6065b8..f688e09f22b0509fedf154da53b9775995fa4a5b 100644
+index ff520a7fa8235a46d861df60569077be258d7cb1..d4571c0a05034d7b061b8bdc03b17e3fc88b943c 100644
 --- a/src/main/java/org/bukkit/craftbukkit/CraftServer.java
 +++ b/src/main/java/org/bukkit/craftbukkit/CraftServer.java
 @@ -248,7 +248,7 @@ import javax.annotation.Nullable; // Paper
