@@ -10662,7 +10662,7 @@ index 6939ef9b1fe782980e77c351d8a385a573d6a8e6..99f56658c70f99592fb40c9df0ce3e47
          }
  
 diff --git a/src/main/java/net/minecraft/server/MinecraftServer.java b/src/main/java/net/minecraft/server/MinecraftServer.java
-index 0d04320171c479f192f8699d550243b4132b27bc..2a4253aa7002d9fe1c6fa9f94a688b93180d926d 100644
+index 183ed9fda2b41b9ec091ead8774be46e12d9b056..63653c0325b7e1f86aa40590a4cf0e4fd6361ca5 100644
 --- a/src/main/java/net/minecraft/server/MinecraftServer.java
 +++ b/src/main/java/net/minecraft/server/MinecraftServer.java
 @@ -303,7 +303,7 @@ public abstract class MinecraftServer extends ReentrantBlockableEventLoop<TickTa
@@ -10793,7 +10793,7 @@ index 0d04320171c479f192f8699d550243b4132b27bc..2a4253aa7002d9fe1c6fa9f94a688b93
                  long i = ((curTime = System.nanoTime()) / (1000L * 1000L)) - this.nextTickTime; // Paper
  
                  if (i > 5000L && this.nextTickTime - this.lastOverloadWarning >= 30000L) { // CraftBukkit
-@@ -2073,7 +2063,7 @@ public abstract class MinecraftServer extends ReentrantBlockableEventLoop<TickTa
+@@ -2074,7 +2064,7 @@ public abstract class MinecraftServer extends ReentrantBlockableEventLoop<TickTa
              net.minecraft.world.item.alchemy.PotionBrewing.reload(); // Paper
              new io.papermc.paper.event.server.ServerResourcesReloadedEvent(cause).callEvent(); // Paper
              // Paper start
@@ -10802,7 +10802,7 @@ index 0d04320171c479f192f8699d550243b4132b27bc..2a4253aa7002d9fe1c6fa9f94a688b93
                  return;
              }
              // this.getPlayerList().saveAll(); // Paper - we don't need to save everything, just advancements
-@@ -2481,7 +2471,7 @@ public abstract class MinecraftServer extends ReentrantBlockableEventLoop<TickTa
+@@ -2482,7 +2472,7 @@ public abstract class MinecraftServer extends ReentrantBlockableEventLoop<TickTa
      // CraftBukkit start
      @Override
      public boolean isSameThread() {
@@ -15423,10 +15423,10 @@ index 4c109bbc4694e9d3d8804cc64650f79abf315e3a..505e3fdb09b8553c3684be426f508b3c
  
      @Override
 diff --git a/src/main/java/org/bukkit/craftbukkit/CraftServer.java b/src/main/java/org/bukkit/craftbukkit/CraftServer.java
-index e69fd412bfffea8216d01ad12a886b2067fd6158..3c74b8cf42f95c63cf6df42d630439d6a328b241 100644
+index 33ff57359093335ff8d8ceb4ee3b107dfbc18c79..e6fda639b878effdba7e58431f71d14ff398bab8 100644
 --- a/src/main/java/org/bukkit/craftbukkit/CraftServer.java
 +++ b/src/main/java/org/bukkit/craftbukkit/CraftServer.java
-@@ -1251,7 +1251,7 @@ public final class CraftServer implements Server {
+@@ -1256,7 +1256,7 @@ public final class CraftServer implements Server {
  
          internal.keepSpawnInMemory = creator.keepSpawnLoaded().toBooleanOrElse(internal.getWorld().getKeepSpawnInMemory()); // Paper
          this.getServer().prepareLevels(internal.getChunkSource().chunkMap.progressListener, internal);
@@ -15435,7 +15435,7 @@ index e69fd412bfffea8216d01ad12a886b2067fd6158..3c74b8cf42f95c63cf6df42d630439d6
  
          this.pluginManager.callEvent(new WorldLoadEvent(internal.getWorld()));
          return internal.getWorld();
-@@ -1296,7 +1296,7 @@ public final class CraftServer implements Server {
+@@ -1301,7 +1301,7 @@ public final class CraftServer implements Server {
              }
  
              handle.getChunkSource().close(save);
@@ -15444,7 +15444,7 @@ index e69fd412bfffea8216d01ad12a886b2067fd6158..3c74b8cf42f95c63cf6df42d630439d6
              handle.convertable.close();
          } catch (Exception ex) {
              this.getLogger().log(Level.SEVERE, null, ex);
-@@ -2180,7 +2180,7 @@ public final class CraftServer implements Server {
+@@ -2185,7 +2185,7 @@ public final class CraftServer implements Server {
  
      @Override
      public boolean isPrimaryThread() {

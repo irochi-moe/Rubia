@@ -359,7 +359,7 @@ index 7c96f7fc5997761426a0c62cad0cab5cc668f282..058ad465d0255c20fdcc32c7284907f9
  
          if (environment.includeIntegrated) {
 diff --git a/src/main/java/net/minecraft/server/MinecraftServer.java b/src/main/java/net/minecraft/server/MinecraftServer.java
-index 18e27feca3c07e5ea6849fe9634b9694cf84b3e3..0d04320171c479f192f8699d550243b4132b27bc 100644
+index 48d4fd0661b510d82fb545ab193e096cc4190d0d..183ed9fda2b41b9ec091ead8774be46e12d9b056 100644
 --- a/src/main/java/net/minecraft/server/MinecraftServer.java
 +++ b/src/main/java/net/minecraft/server/MinecraftServer.java
 @@ -182,6 +182,8 @@ import org.bukkit.event.server.ServerLoadEvent;
@@ -401,7 +401,7 @@ index bdd6560fe85950b0a857a949cb38c044da44ca6b..b22c3631f30f634bff38ae07dc8096ad
          }
      }
 diff --git a/src/main/java/net/minecraft/server/level/ServerPlayer.java b/src/main/java/net/minecraft/server/level/ServerPlayer.java
-index 3615576c24d5d6790a6894a91180de25fa0e5a9c..a03a55cda4555da92527f653002fbcccff919721 100644
+index a6fe628eb56833e79a05ce192a3848fc66db93c9..b4f976f322798ba756cac0a8ef4bcc47d785712b 100644
 --- a/src/main/java/net/minecraft/server/level/ServerPlayer.java
 +++ b/src/main/java/net/minecraft/server/level/ServerPlayer.java
 @@ -262,6 +262,7 @@ public class ServerPlayer extends Player {
@@ -428,7 +428,7 @@ index 3615576c24d5d6790a6894a91180de25fa0e5a9c..a03a55cda4555da92527f653002fbccc
      }
  
      // CraftBukkit start - World fallback code, either respawn location or global spawn
-@@ -2484,4 +2487,14 @@ public class ServerPlayer extends Player {
+@@ -2485,4 +2488,14 @@ public class ServerPlayer extends Player {
      // CraftBukkit end
  
      public final int getViewDistance() { throw new UnsupportedOperationException("Use PlayerChunkLoader"); } // Paper - placeholder
