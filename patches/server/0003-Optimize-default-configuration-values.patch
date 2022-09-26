@@ -6,10 +6,10 @@ Subject: [PATCH] Optimize default configuration values
 Thanks to YouHaveTrouble at https://github.com/YouHaveTrouble/minecraft-optimization
 
 diff --git a/src/main/java/io/papermc/paper/configuration/GlobalConfiguration.java b/src/main/java/io/papermc/paper/configuration/GlobalConfiguration.java
-index 456595e4b7e0c7f50617aa2694b0d2dfc368ab81..a2bb3f185d89a4a8ec52c5712e094a8d47425de3 100644
+index 4a8286c78a9a5e305b19cc5d316bc73a78e49b4d..a49c1c75dd5265aa01ca53abe5c092f93706954f 100644
 --- a/src/main/java/io/papermc/paper/configuration/GlobalConfiguration.java
 +++ b/src/main/java/io/papermc/paper/configuration/GlobalConfiguration.java
-@@ -51,7 +51,7 @@ public class GlobalConfiguration extends ConfigurationPart {
+@@ -50,7 +50,7 @@ public class GlobalConfiguration extends ConfigurationPart {
      public Timings timings;
  
      public class Timings extends ConfigurationPart.Post {
