@@ -1,0 +1,19 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: Irochi <me@irochi.moe>
+Date: Thu, 29 Sep 2022 01:44:04 +0900
+Subject: [PATCH] Paper PR #8387 - Update Velocity natives
+
+
+diff --git a/build.gradle.kts b/build.gradle.kts
+index aa2f4ba45f4c70c08a6f2261cc2d85ac5c8a95ef..df9c6a92d9ec27f82bd3088afb70448d7937ef90 100644
+--- a/build.gradle.kts
++++ b/build.gradle.kts
+@@ -36,7 +36,7 @@ dependencies {
+     implementation("commons-lang:commons-lang:2.6")
+     implementation("net.fabricmc:mapping-io:0.3.0") // Paper - needed to read mappings for stacktrace deobfuscation
+     // Paper start - Use Velocity cipher
+-    implementation("com.velocitypowered:velocity-native:1.1.0-SNAPSHOT") {
++    implementation("com.velocitypowered:velocity-native:3.1.2-SNAPSHOT") {
+         isTransitive = false
+     }
+     // Paper end
