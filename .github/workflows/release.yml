@@ -1,5 +1,5 @@
 name: Release
-on: [ workflow_dispatch ]
+on: [ push, workflow_dispatch ]
 
 env:
   version: 1.19.2
@@ -41,7 +41,7 @@ jobs:
       - name: Prepare release
         run: |
           zip build/libs/Rubia-${{ env.version }}-${{ env.workflow }}-jars.zip build/libs/*.jar
-          mv build/libs/Rubia-paperclip-${{ env.version }}-R0.1-SNAPSHOT-reobf.jar build/libs/Rubia-${{ env.version }}-${{ env.workflow }}.jar
+          mv build/libs/rubia-paperclip-${{ env.version }}-R0.1-SNAPSHOT-reobf.jar build/libs/Rubia-${{ env.version }}-${{ env.workflow }}.jar
 
       - name: Release Artifacts
         if: github.ref_name == env.branch
