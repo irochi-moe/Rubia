@@ -1,9 +1,13 @@
 name: Release
-on: [ push, workflow_dispatch ]
+on:
+  push:
+    branches:
+      - main
+      - ver/1.19.2
+  workflow_dispatch:
 
 env:
   version: 1.19.2
-  branch: ver/1.19.2
 
 jobs:
   release:
@@ -43,7 +47,6 @@ jobs:
           mv build/libs/rubia-paperclip-${{ env.version }}-R0.1-SNAPSHOT-reobf.jar build/libs/Rubia-${{ env.version }}-${{ env.workflow }}.jar
 
       - name: Release Artifacts
-        if: github.ref_name == env.branch
         uses: marvinpinto/action-automatic-releases@latest
         with:
           title: "Release #${{ env.workflow }}"
