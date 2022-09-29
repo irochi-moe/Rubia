@@ -24,7 +24,9 @@ jobs:
           cache: 'gradle'
 
       - name: Configure Git
-        run: git config --global user.email "no-reply@github.com" && git config --global user.name "Github Actions"
+        run: |
+          git config --global user.email "no-reply@github.com" && git config --global user.name "Github Actions"
+          echo "workflow=$GITHUB_RUN_NUMBER" >> $GITHUB_ENV
 
       - name: Apply Patches
         run: ./gradlew applyPatches --stacktrace
