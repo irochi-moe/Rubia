@@ -1,9 +1,5 @@
 name: Release
 on:
-  push:
-    branches:
-      - main
-      - ver/1.19.2
   workflow_dispatch:
 
 env:
