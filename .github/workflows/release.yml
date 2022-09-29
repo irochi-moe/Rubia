@@ -1,0 +1,56 @@
+name: Release
+on: [ workflow_dispatch ]
+
+env:
+  version: 1.19.2
+  branch: ver/1.19.2
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    if: "!contains(github.event.commits[0].message, '[ci-skip]')"
+    steps:
+      - name: Checkout action
+        uses: actions/checkout@v3
+
+      - name: Validate Gradle Wrapper
+        uses: gradle/wrapper-validation-action@v1
+
+      - name: Set up JDK
+        uses: actions/setup-java@v3
+        with:
+          distribution: temurin
+          java-version: 17
+          cache: 'gradle'
+
+      - name: Configure Git
+        run: git config --global user.email "no-reply@github.com" && git config --global user.name "Github Actions"
+
+      - name: Apply Patches
+        run: ./gradlew applyPatches --stacktrace
+
+      - name: Build
+        run: ./gradlew build --stacktrace
+
+      - name: Create Reobf Jar
+        run: ./gradlew createReobfPaperclipJar --stacktrace
+
+      - name: Create Mojmap Jar
+        run: ./gradlew createMojmapPaperclipJar --stacktrace
+
+      - name: Prepare release
+        run: |
+          zip build/libs/Rubia-${{ env.version }}-${{ env.workflow }}-jars.zip build/libs/*.jar
+          mv build/libs/Rubia-paperclip-${{ env.version }}-R0.1-SNAPSHOT-reobf.jar build/libs/Rubia-${{ env.version }}-${{ env.workflow }}.jar
+
+      - name: Release Artifacts
+        if: github.ref_name == env.branch
+        uses: marvinpinto/action-automatic-releases@latest
+        with:
+          title: "Release #${{ env.workflow }}"
+          automatic_release_tag: release-${{ env.workflow }}
+          repo_token: "${{ secrets.GITHUB_TOKEN }}"
+          files: |
+            build/libs/Rubia-${{ env.version }}-${{ env.workflow }}-jars.zip
+            build/libs/Rubia-${{ env.version }}-${{ env.workflow }}.jar
+          prerelease: false
