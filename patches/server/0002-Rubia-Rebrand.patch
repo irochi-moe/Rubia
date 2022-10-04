@@ -5,7 +5,7 @@ Subject: [PATCH] Rubia Rebrand
 
 
 diff --git a/build.gradle.kts b/build.gradle.kts
-index 7074295d7399d03e259598bb4bfa0f21434d74be..cb6257aa98d38ea3650b0216cfc535313725a6df 100644
+index f0d22a733e3b97fb959cd566fb6c93c6d5681e16..14a49f0d814e7f0b3bb499e6f3b69964e932b7ae 100644
 --- a/build.gradle.kts
 +++ b/build.gradle.kts
 @@ -9,7 +9,7 @@ plugins {
@@ -410,10 +410,10 @@ index abe37c7c3c6f5ab73afd738ec78f06d7e4d2ed96..a728593563d8ae93d516d6f496a6cf63
          stringbuilder.append(CrashReport.getErrorComment());
          stringbuilder.append("\n\n");
 diff --git a/src/main/java/net/minecraft/server/MinecraftServer.java b/src/main/java/net/minecraft/server/MinecraftServer.java
-index 67e150e35d328eb13c8f86e61dab2f11c76b21df..7f9ed9d4fb2840f66242b952ea510d2742a12d64 100644
+index af9da39dffda01325af2ab3dd8b5e1efb18e013a..02038b72b372ae7ef9f1e3aa65cedc3fe9b70c22 100644
 --- a/src/main/java/net/minecraft/server/MinecraftServer.java
 +++ b/src/main/java/net/minecraft/server/MinecraftServer.java
-@@ -913,7 +913,7 @@ public abstract class MinecraftServer extends ReentrantBlockableEventLoop<TickTa
+@@ -923,7 +923,7 @@ public abstract class MinecraftServer extends ReentrantBlockableEventLoop<TickTa
          shutdownThread = Thread.currentThread();
          org.spigotmc.WatchdogThread.doStop(); // Paper
          if (!isSameThread()) {
@@ -422,17 +422,17 @@ index 67e150e35d328eb13c8f86e61dab2f11c76b21df..7f9ed9d4fb2840f66242b952ea510d27
              while (this.getRunningThread().isAlive()) {
                  this.getRunningThread().stop();
                  try {
-@@ -1676,7 +1676,7 @@ public abstract class MinecraftServer extends ReentrantBlockableEventLoop<TickTa
+@@ -1656,7 +1656,7 @@ public abstract class MinecraftServer extends ReentrantBlockableEventLoop<TickTa
  
      @DontObfuscate
      public String getServerModName() {
 -        return "Pufferfish"; // Pufferfish - Pufferfish > // Paper - Paper > // Spigot - Spigot > // CraftBukkit - cb > vanilla!
-+        return "Rubia"; // Pufferfish - Pufferfish > // Paper - Paper > // Spigot - Spigot > // CraftBukkit - cb > vanilla! // Rubia
++        return "Rubia"; // Rubia - Rubia > // Paper - Paper > // Spigot - Spigot > // CraftBukkit - cb > vanilla!
      }
  
      public SystemReport fillSystemReport(SystemReport details) {
 diff --git a/src/main/java/net/minecraft/world/level/chunk/storage/RegionFileStorage.java b/src/main/java/net/minecraft/world/level/chunk/storage/RegionFileStorage.java
-index c2356ed1a00fd8087cca285be5e7f6a5442e73fb..fc32a11e9c18f0a910ef519c817dd150b03c2102 100644
+index 8db3bcc63aeb23e5b50864ebea675acc75d184ff..022cb05743682b9f042643fbf1b320e81946e44c 100644
 --- a/src/main/java/net/minecraft/world/level/chunk/storage/RegionFileStorage.java
 +++ b/src/main/java/net/minecraft/world/level/chunk/storage/RegionFileStorage.java
 @@ -113,7 +113,7 @@ public class RegionFileStorage implements AutoCloseable {
@@ -445,7 +445,7 @@ index c2356ed1a00fd8087cca285be5e7f6a5442e73fb..fc32a11e9c18f0a910ef519c817dd150
  
      private static final int DEFAULT_SIZE_THRESHOLD = 1024 * 8;
 diff --git a/src/main/java/org/bukkit/craftbukkit/CraftServer.java b/src/main/java/org/bukkit/craftbukkit/CraftServer.java
-index ff520a7fa8235a46d861df60569077be258d7cb1..d4571c0a05034d7b061b8bdc03b17e3fc88b943c 100644
+index b8efe50c860a7537f345f46f3b3d68906ad54006..1e2a61dd4c7b7dabecbf6d1426eae035cff9891f 100644
 --- a/src/main/java/org/bukkit/craftbukkit/CraftServer.java
 +++ b/src/main/java/org/bukkit/craftbukkit/CraftServer.java
 @@ -248,7 +248,7 @@ import javax.annotation.Nullable; // Paper
@@ -453,7 +453,7 @@ index ff520a7fa8235a46d861df60569077be258d7cb1..d4571c0a05034d7b061b8bdc03b17e3f
  
  public final class CraftServer implements Server {
 -    private final String serverName = "Pufferfish"; // Paper // Pufferfish
-+    private final String serverName = "Rubia"; // Paper // Pufferfish // Rubia
++    private final String serverName = "Rubia"; // Paper // Rubia
      private final String serverVersion;
      private final String bukkitVersion = Versioning.getBukkitVersion();
      private final Logger logger = Logger.getLogger("Minecraft");
@@ -510,10 +510,10 @@ index 80553face9c70c2a3d897681e7761df85b22d464..44c2d6cfff3fd591935d9aa2de2d50de
  
          if (stream != null) {
 diff --git a/src/main/java/org/spigotmc/WatchdogThread.java b/src/main/java/org/spigotmc/WatchdogThread.java
-index d568fc92d03c313a782796cc720a1ebb1a5ad8be..03931dfd5b900fbbbd86c5cf3a4febffeb23cabc 100644
+index e9fa7faaa4451e36b3908cbcbbe0baf213abde96..b332f4f0d0f9bf4b214d8d694765fbdfe85bf6a6 100644
 --- a/src/main/java/org/spigotmc/WatchdogThread.java
 +++ b/src/main/java/org/spigotmc/WatchdogThread.java
-@@ -96,7 +96,7 @@ public class WatchdogThread extends Thread
+@@ -96,7 +96,7 @@ public final class WatchdogThread extends io.papermc.paper.util.TickThread // Pa
  
      private WatchdogThread(long timeoutTime, boolean restart)
      {
@@ -522,7 +522,7 @@ index d568fc92d03c313a782796cc720a1ebb1a5ad8be..03931dfd5b900fbbbd86c5cf3a4febff
          this.timeoutTime = timeoutTime;
          this.restart = restart;
          earlyWarningEvery = Math.min(io.papermc.paper.configuration.GlobalConfiguration.get().watchdog.earlyWarningEvery, timeoutTime); // Paper
-@@ -155,14 +155,14 @@ public class WatchdogThread extends Thread
+@@ -155,14 +155,14 @@ public final class WatchdogThread extends io.papermc.paper.util.TickThread // Pa
                  if (isLongTimeout) {
                  // Paper end
                  log.log( Level.SEVERE, "------------------------------" );
@@ -540,7 +540,7 @@ index d568fc92d03c313a782796cc720a1ebb1a5ad8be..03931dfd5b900fbbbd86c5cf3a4febff
                  //
                  if ( net.minecraft.world.level.Level.lastPhysicsProblem != null )
                  {
-@@ -185,12 +185,12 @@ public class WatchdogThread extends Thread
+@@ -185,12 +185,12 @@ public final class WatchdogThread extends io.papermc.paper.util.TickThread // Pa
                  // Paper end
                  } else
                  {
@@ -552,10 +552,10 @@ index d568fc92d03c313a782796cc720a1ebb1a5ad8be..03931dfd5b900fbbbd86c5cf3a4febff
                  log.log( Level.SEVERE, "------------------------------" );
 -                log.log( Level.SEVERE, "Server thread dump (Look for plugins here before reporting to Paper!):" ); // Paper
 +                log.log( Level.SEVERE, "Server thread dump (Look for plugins here before reporting to Rubia!):" ); // Paper // Rubia
-                 com.destroystokyo.paper.io.chunk.ChunkTaskManager.dumpAllChunkLoadInfo(); // Paper
+                 io.papermc.paper.chunk.system.scheduling.ChunkTaskScheduler.dumpAllChunkLoadInfo(isLongTimeout); // Paper // Paper - rewrite chunk system
                  this.dumpTickingInfo(); // Paper - log detailed tick information
-                 WatchdogThread.dumpThread( ManagementFactory.getThreadMXBean().getThreadInfo( server.serverThread.getId(), Integer.MAX_VALUE ), log );
-@@ -206,7 +206,7 @@ public class WatchdogThread extends Thread
+                 WatchdogThread.dumpThread( ManagementFactory.getThreadMXBean().getThreadInfo( MinecraftServer.getServer().serverThread.getId(), Integer.MAX_VALUE ), log );
+@@ -206,7 +206,7 @@ public final class WatchdogThread extends io.papermc.paper.util.TickThread // Pa
                      WatchdogThread.dumpThread( thread, log );
                  }
                  } else {
