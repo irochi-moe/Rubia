@@ -6,6 +6,8 @@
 [![Watchers](https://img.shields.io/github/watchers/IrochiMC/Rubia?style=for-the-badge)](https://github.com/IrochiMC/Rubia/watchers)
 [![Forks](https://img.shields.io/github/forks/IrochiMC/Rubia?style=for-the-badge)](https://github.com/IrochiMC/Rubia/network/members)
 [![Stars](https://img.shields.io/github/stars/IrochiMC/Rubia?style=for-the-badge)](https://github.com/IrochiMC/Rubia/stargazers)
+[![License](https://img.shields.io/github/license/IrochiMC/Rubia?style=for-the-badge&logo=github)](LICENSE)
+[![Build](https://img.shields.io/github/workflow/status/IrochiMC/Rubia/Build?logo=GoogleAnalytics&style=for-the-badge&logoColor=ffffff)](https://github.com/IrochiMC/Rubia/actions)
 
 [![Discord](<https://img.shields.io/discord/883670043404173352?color=5865F2&label=discord(not_ready)&style=for-the-badge>)](https://irochi.moe)
 
