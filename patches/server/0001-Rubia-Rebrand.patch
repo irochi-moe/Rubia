@@ -5,7 +5,7 @@ Subject: [PATCH] Rubia Rebrand
 
 
 diff --git a/build.gradle.kts b/build.gradle.kts
-index 2374cc9bab5039d0a0dc11d4b2ec573ab75778a7..aa2f4ba45f4c70c08a6f2261cc2d85ac5c8a95ef 100644
+index 44e0f265432487fe5c3c00c5245041298ade16a0..df9c6a92d9ec27f82bd3088afb70448d7937ef90 100644
 --- a/build.gradle.kts
 +++ b/build.gradle.kts
 @@ -9,8 +9,12 @@ plugins {
@@ -62,7 +62,7 @@ index 7b1843e16745ca8db2244e17490d291401f22679..23b38d17bc99904fd9d426452f2eafab
                  metrics.addCustomChart(new Metrics.DrilldownPie("java_version", () -> {
                      Map<String, Map<String, Integer>> map = new HashMap<>();
 diff --git a/src/main/java/com/destroystokyo/paper/PaperVersionFetcher.java b/src/main/java/com/destroystokyo/paper/PaperVersionFetcher.java
-index bf42969859545a8a520923ef1836ffa4a5cc24a0..e2c877e0f717fa31dd8774df527ffd2c5261fc88 100644
+index bf42969859545a8a520923ef1836ffa4a5cc24a0..fafad13fa9442532de4eb3b1106fd980f6264d64 100644
 --- a/src/main/java/com/destroystokyo/paper/PaperVersionFetcher.java
 +++ b/src/main/java/com/destroystokyo/paper/PaperVersionFetcher.java
 @@ -20,7 +20,7 @@ import java.util.stream.StreamSupport;
@@ -70,7 +70,7 @@ index bf42969859545a8a520923ef1836ffa4a5cc24a0..e2c877e0f717fa31dd8774df527ffd2c
      private static final java.util.regex.Pattern VER_PATTERN = java.util.regex.Pattern.compile("^([0-9\\.]*)\\-.*R"); // R is an anchor, will always give '-R' at end
      private static final String GITHUB_BRANCH_NAME = "master";
 -    private static final String DOWNLOAD_PAGE = "https://papermc.io/downloads";
-+    private static final String DOWNLOAD_PAGE = "https://github.com/IrochiMC/Rubia/releases"; // Rubia
++    private static final String DOWNLOAD_PAGE = "https://github.com/irochi-moe/Rubia/releases"; // Rubia
      private static @Nullable String mcVer;
  
      @Override
@@ -81,7 +81,7 @@ index bf42969859545a8a520923ef1836ffa4a5cc24a0..e2c877e0f717fa31dd8774df527ffd2c
 -        String[] parts = serverVersion.substring("git-Paper-".length()).split("[-\\s]");
 -        final Component updateMessage = getUpdateStatusMessage("PaperMC/Paper", GITHUB_BRANCH_NAME, parts[0]);
 +        String[] parts = serverVersion.substring("git-Rubia-".length()).split("[-\\s]"); // Rubia
-+        final Component updateMessage = getUpdateStatusMessage("IrochiMC/Rubia", GITHUB_BRANCH_NAME, parts[0]); // Rubia
++        final Component updateMessage = getUpdateStatusMessage("irochi-moe/Rubia", GITHUB_BRANCH_NAME, parts[0]); // Rubia
          final Component history = getHistory();
  
          return history != null ? TextComponent.ofChildren(updateMessage, Component.newline(), history) : updateMessage;
@@ -90,7 +90,7 @@ index bf42969859545a8a520923ef1836ffa4a5cc24a0..e2c877e0f717fa31dd8774df527ffd2c
                  mcVer = result.substring(0, result.length() - 2); // strip 'R' anchor and trailing '-'
              } else {
 -                org.bukkit.Bukkit.getLogger().warning("Unable to match version to pattern! Report to PaperMC!");
-+                org.bukkit.Bukkit.getLogger().warning("Unable to match version to pattern! Report to Rubia!"); // Rubia
++                org.bukkit.Bukkit.getLogger().warning("Unable to match version to pattern! Report to irochi.moe!"); // Rubia
                  org.bukkit.Bukkit.getLogger().warning("Pattern: " + VER_PATTERN.toString());
                  org.bukkit.Bukkit.getLogger().warning("Version: " + org.bukkit.Bukkit.getBukkitVersion());
              }
@@ -147,7 +147,7 @@ index c5d5648f4ca603ef2b1df723b58f9caf4dd3c722..160a2253701e9aa8f6796e4a61ed2a7d
                  .option(LineReader.Option.COMPLETE_IN_WORD, true);
 diff --git a/src/main/java/moe/irochi/rubia/RubiaVersionFetcher.java b/src/main/java/moe/irochi/rubia/RubiaVersionFetcher.java
 new file mode 100644
-index 0000000000000000000000000000000000000000..94340f68d2b55f121c2e09f13693433f561710c2
+index 0000000000000000000000000000000000000000..3aab7470e70c3fc1ea2a468367b76ec08627bafb
 --- /dev/null
 +++ b/src/main/java/moe/irochi/rubia/RubiaVersionFetcher.java
 @@ -0,0 +1,106 @@
@@ -184,7 +184,7 @@ index 0000000000000000000000000000000000000000..94340f68d2b55f121c2e09f13693433f
 +    private static final Logger LOGGER = Logger.getLogger("RubiaVersionFetcher");
 +    private static final HttpClient client = HttpClient.newHttpClient();
 +
-+    private static final String GITHUB_FORMAT = "https://api.github.com/repos/IrochiMC/Rubia/compare/ver/1.19.2...%s";
++    private static final String GITHUB_FORMAT = "https://api.github.com/repos/irochi-moe/Rubia/compare/ver/1.19.2...%s";
 +
 +    private static final HttpResponse.BodyHandler<JsonObject> JSON_OBJECT_BODY_HANDLER = responseInfo -> HttpResponse.BodySubscribers.mapping(
 +            HttpResponse.BodySubscribers.ofString(StandardCharsets.UTF_8),
@@ -321,7 +321,7 @@ index 111f8276f26350a5c62a7b8577b4598978b5355d..e6fda639b878effdba7e58431f71d14f
      private final String bukkitVersion = Versioning.getBukkitVersion();
      private final Logger logger = Logger.getLogger("Minecraft");
 diff --git a/src/main/java/org/bukkit/craftbukkit/Main.java b/src/main/java/org/bukkit/craftbukkit/Main.java
-index f30621be24c6c3a4f173436fce1ad1c13507c84f..0606b0d3743bb671346bd52ba05ec8a0237ed5e2 100644
+index f30621be24c6c3a4f173436fce1ad1c13507c84f..077394b7d64c75f874227e9bf32075ca52064ff7 100644
 --- a/src/main/java/org/bukkit/craftbukkit/Main.java
 +++ b/src/main/java/org/bukkit/craftbukkit/Main.java
 @@ -278,7 +278,7 @@ public class Main {
@@ -329,7 +329,7 @@ index f30621be24c6c3a4f173436fce1ad1c13507c84f..0606b0d3743bb671346bd52ba05ec8a0
                          // Paper start - This is some stupid bullshit
                          System.err.println("*** Warning, you've not updated in a while! ***");
 -                        System.err.println("*** Please download a new build as per instructions from https://papermc.io/downloads ***"); // Paper
-+                        System.err.println("*** Please download a new build at https://github.com/IrochiMC/Rubia ***"); // Paper // Rubia
++                        System.err.println("*** Please download a new build at https://github.com/irochi-moe/Rubia ***"); // Paper // Rubia
                          //System.err.println("*** Server will start in 20 seconds ***");
                          //Thread.sleep(TimeUnit.SECONDS.toMillis(20));
                          // Paper End
@@ -373,7 +373,7 @@ index 774556a62eb240da42e84db4502e2ed43495be17..05d87ec6b2964ab0758ebc63f36da206
  
          if (stream != null) {
 diff --git a/src/main/java/org/spigotmc/WatchdogThread.java b/src/main/java/org/spigotmc/WatchdogThread.java
-index e9fa7faaa4451e36b3908cbcbbe0baf213abde96..b332f4f0d0f9bf4b214d8d694765fbdfe85bf6a6 100644
+index e9fa7faaa4451e36b3908cbcbbe0baf213abde96..6c364de86696b0241cd51b8a91857e43a6b90a78 100644
 --- a/src/main/java/org/spigotmc/WatchdogThread.java
 +++ b/src/main/java/org/spigotmc/WatchdogThread.java
 @@ -96,7 +96,7 @@ public final class WatchdogThread extends io.papermc.paper.util.TickThread // Pa
@@ -396,7 +396,7 @@ index e9fa7faaa4451e36b3908cbcbbe0baf213abde96..b332f4f0d0f9bf4b214d8d694765fbdf
                  log.log( Level.SEVERE, "If you see a world save or edit, then it means you did far more than your server can handle at once" );
                  log.log( Level.SEVERE, "\t If this is the case, consider increasing timeout-time in spigot.yml but note that this will replace the crash with LARGE lag spikes" );
 -                log.log( Level.SEVERE, "If you are unsure or still think this is a Paper bug, please report this to https://github.com/PaperMC/Paper/issues" );
-+                log.log( Level.SEVERE, "If you are unsure or still think this is a Rubia bug, please report this to https://github.com/IrochiMC/Rubia/issues" ); // Rubia
++                log.log( Level.SEVERE, "If you are unsure or still think this is a Rubia bug, please report this to https://github.com/irochi-moe/Rubia/issues" ); // Rubia
                  log.log( Level.SEVERE, "Be sure to include ALL relevant console errors and Minecraft crash reports" );
 -                log.log( Level.SEVERE, "Paper version: " + Bukkit.getServer().getVersion() );
 +                log.log( Level.SEVERE, "Rubia version: " + Bukkit.getServer().getVersion() ); // Rubia
