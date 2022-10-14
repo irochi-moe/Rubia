@@ -401,7 +401,7 @@ index d4efadbc87ee0b6cb8564c57fc9dcbb48367a767..bf47e0e92d64301c45ddef7a28dfd581
          }
      }
 diff --git a/src/main/java/net/minecraft/server/level/ServerPlayer.java b/src/main/java/net/minecraft/server/level/ServerPlayer.java
-index af7acb628b84539b1ee5ef1934f75f091c4cd91e..8f818ad4d9257b532085a3d2f2502255b28819d2 100644
+index e5af7ef4ada68922a70f593ccec555ecb50627a9..921675061c5ea8f7e9d6ba3f83e1fe5d83da0a75 100644
 --- a/src/main/java/net/minecraft/server/level/ServerPlayer.java
 +++ b/src/main/java/net/minecraft/server/level/ServerPlayer.java
 @@ -261,6 +261,7 @@ public class ServerPlayer extends Player {
@@ -412,7 +412,7 @@ index af7acb628b84539b1ee5ef1934f75f091c4cd91e..8f818ad4d9257b532085a3d2f2502255
  
      public boolean isRealPlayer; // Paper
      public double lastEntitySpawnRadiusSquared; // Paper - optimise isOutsideRange, this field is in blocks
-@@ -467,6 +468,7 @@ public class ServerPlayer extends Player {
+@@ -486,6 +487,7 @@ public class ServerPlayer extends Player {
              }
          }
  
@@ -420,7 +420,7 @@ index af7acb628b84539b1ee5ef1934f75f091c4cd91e..8f818ad4d9257b532085a3d2f2502255
      }
  
      @Override
-@@ -527,6 +529,7 @@ public class ServerPlayer extends Player {
+@@ -546,6 +548,7 @@ public class ServerPlayer extends Player {
          }
          this.getBukkitEntity().setExtraData(nbt); // CraftBukkit
  
@@ -428,7 +428,7 @@ index af7acb628b84539b1ee5ef1934f75f091c4cd91e..8f818ad4d9257b532085a3d2f2502255
      }
  
      // CraftBukkit start - World fallback code, either respawn location or global spawn
-@@ -2468,4 +2471,14 @@ public class ServerPlayer extends Player {
+@@ -2487,4 +2490,14 @@ public class ServerPlayer extends Player {
          return (CraftPlayer) super.getBukkitEntity();
      }
      // CraftBukkit end
