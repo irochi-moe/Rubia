@@ -5,7 +5,7 @@ Subject: [PATCH] Better offline warning message when using Velocity
 
 
 diff --git a/src/main/java/net/minecraft/server/dedicated/DedicatedServer.java b/src/main/java/net/minecraft/server/dedicated/DedicatedServer.java
-index ccfdd2bb39c849a98c974a87c26aca72660982fd..6d041d7a0530c181604fa258614135b59090e5f2 100644
+index ccfdd2bb39c849a98c974a87c26aca72660982fd..8fcfc9206a766363840df1dcaea14b588814d2eb 100644
 --- a/src/main/java/net/minecraft/server/dedicated/DedicatedServer.java
 +++ b/src/main/java/net/minecraft/server/dedicated/DedicatedServer.java
 @@ -288,6 +288,8 @@ public class DedicatedServer extends MinecraftServer implements ServerInterface
@@ -13,7 +13,7 @@ index ccfdd2bb39c849a98c974a87c26aca72660982fd..6d041d7a0530c181604fa258614135b5
                  DedicatedServer.LOGGER.warn("Whilst this makes it possible to use BungeeCord, unless access to your server is properly restricted, it also opens up the ability for hackers to connect with any username they choose.");
                  DedicatedServer.LOGGER.warn("Please see http://www.spigotmc.org/wiki/firewall-guide/ for further information.");
 +            } else if (io.papermc.paper.configuration.GlobalConfiguration.get().proxies.velocity.enabled) {
-+                DedicatedServer.LOGGER.warn("The server is configured to use Velocity. Make sure you have set correct forwarding secret key in both Paper and Velocity's configuration file if using modern forwarding mode."); // Rubia
++                DedicatedServer.LOGGER.warn("The server is configured to use Velocity. Make sure you have set correct forwarding secret key in both Paper and Velocity's configuration file."); // Rubia
              } else {
                  DedicatedServer.LOGGER.warn("While this makes the game possible to play without internet access, it also opens up the ability for hackers to connect with any username they choose.");
              }
