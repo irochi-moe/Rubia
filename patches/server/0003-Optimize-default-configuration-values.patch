@@ -6,7 +6,7 @@ Subject: [PATCH] Optimize default configuration values
 Thanks to YouHaveTrouble at https://github.com/YouHaveTrouble/minecraft-optimization
 
 diff --git a/src/main/java/io/papermc/paper/configuration/GlobalConfiguration.java b/src/main/java/io/papermc/paper/configuration/GlobalConfiguration.java
-index 4a8286c78a9a5e305b19cc5d316bc73a78e49b4d..a49c1c75dd5265aa01ca53abe5c092f93706954f 100644
+index 63ec2ebb71aa0e0dbb64bbce7cd3c9494e9ce2e7..64e882b718bb7d831f77d7c1b2842edb5b51ce96 100644
 --- a/src/main/java/io/papermc/paper/configuration/GlobalConfiguration.java
 +++ b/src/main/java/io/papermc/paper/configuration/GlobalConfiguration.java
 @@ -50,7 +50,7 @@ public class GlobalConfiguration extends ConfigurationPart {
@@ -19,7 +19,7 @@ index 4a8286c78a9a5e305b19cc5d316bc73a78e49b4d..a49c1c75dd5265aa01ca53abe5c092f9
          public String url = "https://timings.aikar.co/";
          public boolean serverNamePrivacy = false;
 diff --git a/src/main/java/io/papermc/paper/configuration/WorldConfiguration.java b/src/main/java/io/papermc/paper/configuration/WorldConfiguration.java
-index 3d2e67dc559ee3910b17ca86a46030ec05232250..76fc819dc63b6c1b8aafda81ed83e1c994f5076b 100644
+index a1bd848bbf924267e74e61dabdb840628712b1ad..b326856e659a24fa4cf8f5efb0afa6e78c6778ec 100644
 --- a/src/main/java/io/papermc/paper/configuration/WorldConfiguration.java
 +++ b/src/main/java/io/papermc/paper/configuration/WorldConfiguration.java
 @@ -80,16 +80,18 @@ public class WorldConfiguration extends ConfigurationPart {
@@ -130,8 +130,8 @@ index 3d2e67dc559ee3910b17ca86a46030ec05232250..76fc819dc63b6c1b8aafda81ed83e1c9
 +            public BooleanOrDefault findAlreadyDiscoveredLootTable = new BooleanOrDefault(true); // Rubia
          }
  
-         public int waterOverLavaFlowSpeed = 5;
-@@ -380,7 +411,7 @@ public class WorldConfiguration extends ConfigurationPart {
+         public int fireTickDelay = 30;
+@@ -381,7 +412,7 @@ public class WorldConfiguration extends ConfigurationPart {
      public class Hopper extends ConfigurationPart {
          public boolean cooldownWhenFull = true;
          public boolean disableMoveEvent = false;
@@ -140,7 +140,7 @@ index 3d2e67dc559ee3910b17ca86a46030ec05232250..76fc819dc63b6c1b8aafda81ed83e1c9
      }
  
      public Collisions collisions;
-@@ -388,9 +419,9 @@ public class WorldConfiguration extends ConfigurationPart {
+@@ -389,9 +420,9 @@ public class WorldConfiguration extends ConfigurationPart {
      public class Collisions extends ConfigurationPart {
          public boolean onlyPlayersCollide = false;
          public boolean allowVehicleCollisions = true;
@@ -152,7 +152,7 @@ index 3d2e67dc559ee3910b17ca86a46030ec05232250..76fc819dc63b6c1b8aafda81ed83e1c9
          public boolean allowPlayerCrammingDamage = false;
      }
  
-@@ -398,18 +429,31 @@ public class WorldConfiguration extends ConfigurationPart {
+@@ -399,18 +430,31 @@ public class WorldConfiguration extends ConfigurationPart {
  
      public class Chunks extends ConfigurationPart {
          public AutosavePeriod autoSaveInterval = AutosavePeriod.def();
@@ -192,7 +192,7 @@ index 3d2e67dc559ee3910b17ca86a46030ec05232250..76fc819dc63b6c1b8aafda81ed83e1c9
          });
      }
  
-@@ -423,11 +467,22 @@ public class WorldConfiguration extends ConfigurationPart {
+@@ -424,11 +468,22 @@ public class WorldConfiguration extends ConfigurationPart {
      public TickRates tickRates;
  
      public class TickRates extends ConfigurationPart {
@@ -219,7 +219,7 @@ index 3d2e67dc559ee3910b17ca86a46030ec05232250..76fc819dc63b6c1b8aafda81ed83e1c9
      }
  
      @Setting(FeatureSeedsGeneration.FEATURE_SEEDS_KEY)
-@@ -449,9 +504,9 @@ public class WorldConfiguration extends ConfigurationPart {
+@@ -450,9 +505,9 @@ public class WorldConfiguration extends ConfigurationPart {
  
      public class Misc extends ConfigurationPart {
          public int lightQueueSize = 20;
@@ -280,10 +280,10 @@ index 942ba3b9d7d5bf01dd82b03c557d3c8f427ac9c1..e4a220258b051a145872d766cf5dbcd1
          this.broadcastRconToOps = this.get("broadcast-rcon-to-ops", true);
          this.broadcastConsoleToOps = this.get("broadcast-console-to-ops", true);
 diff --git a/src/main/java/org/spigotmc/SpigotWorldConfig.java b/src/main/java/org/spigotmc/SpigotWorldConfig.java
-index 46ef3400605cc420bd88f13838df7d1f1106235e..22487c660a0c17db38f68450cbdc5fee8b5b961d 100644
+index 5503ad6a93d331771a0e92c0da6adedf2ac81aff..93cbb7cf29873c94e9423ad2370b6b0a764f481e 100644
 --- a/src/main/java/org/spigotmc/SpigotWorldConfig.java
 +++ b/src/main/java/org/spigotmc/SpigotWorldConfig.java
-@@ -150,14 +150,14 @@ public class SpigotWorldConfig
+@@ -146,14 +146,14 @@ public class SpigotWorldConfig
      public double itemMerge;
      private void itemMerge()
      {
@@ -300,7 +300,7 @@ index 46ef3400605cc420bd88f13838df7d1f1106235e..22487c660a0c17db38f68450cbdc5fee
          this.log( "Experience Merge Radius: " + this.expMerge );
      }
  
-@@ -196,7 +196,7 @@ public class SpigotWorldConfig
+@@ -192,7 +192,7 @@ public class SpigotWorldConfig
      public byte mobSpawnRange;
      private void mobSpawnRange()
      {
@@ -309,7 +309,7 @@ index 46ef3400605cc420bd88f13838df7d1f1106235e..22487c660a0c17db38f68450cbdc5fee
          this.log( "Mob Spawn Range: " + this.mobSpawnRange );
      }
  
-@@ -207,14 +207,16 @@ public class SpigotWorldConfig
+@@ -203,14 +203,16 @@ public class SpigotWorldConfig
          this.log( "Item Despawn Rate: " + this.itemDespawnRate );
      }
  
@@ -332,7 +332,7 @@ index 46ef3400605cc420bd88f13838df7d1f1106235e..22487c660a0c17db38f68450cbdc5fee
      public int wakeUpInactiveAnimals = 4;
      public int wakeUpInactiveAnimalsEvery = 60*20;
      public int wakeUpInactiveAnimalsFor = 5*20;
-@@ -231,7 +233,7 @@ public class SpigotWorldConfig
+@@ -227,7 +229,7 @@ public class SpigotWorldConfig
      public int villagersWorkImmunityFor = 20;
      public boolean villagersActiveForPanic = true;
      // Paper end
@@ -341,7 +341,7 @@ index 46ef3400605cc420bd88f13838df7d1f1106235e..22487c660a0c17db38f68450cbdc5fee
      public boolean ignoreSpectatorActivation = false;
      private void activationRange()
      {
-@@ -295,9 +297,9 @@ public class SpigotWorldConfig
+@@ -291,9 +293,9 @@ public class SpigotWorldConfig
          this.hopperTransfer = this.getInt( "ticks-per.hopper-transfer", 8 );
          if ( SpigotConfig.version < 11 )
          {
@@ -353,7 +353,7 @@ index 46ef3400605cc420bd88f13838df7d1f1106235e..22487c660a0c17db38f68450cbdc5fee
          this.hopperAmount = this.getInt( "hopper-amount", 1 );
          this.hopperCanLoadChunks = this.getBoolean( "hopper-can-load-chunks", false );
          this.log( "Hopper Transfer: " + this.hopperTransfer + " Hopper Check: " + this.hopperCheck + " Hopper Amount: " + this.hopperAmount + " Hopper Can Load Chunks: " + this.hopperCanLoadChunks );
-@@ -307,7 +309,7 @@ public class SpigotWorldConfig
+@@ -303,7 +305,7 @@ public class SpigotWorldConfig
      public int tridentDespawnRate;
      private void arrowDespawnRate()
      {
@@ -362,7 +362,7 @@ index 46ef3400605cc420bd88f13838df7d1f1106235e..22487c660a0c17db38f68450cbdc5fee
          this.tridentDespawnRate = this.getInt( "trident-despawn-rate", this.arrowDespawnRate );
          this.log( "Arrow Despawn Rate: " + this.arrowDespawnRate + " Trident Respawn Rate:" + this.tridentDespawnRate );
      }
-@@ -322,7 +324,7 @@ public class SpigotWorldConfig
+@@ -318,7 +320,7 @@ public class SpigotWorldConfig
      public boolean nerfSpawnerMobs;
      private void nerfSpawnerMobs()
      {
