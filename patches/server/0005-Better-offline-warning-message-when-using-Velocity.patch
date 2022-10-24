@@ -1,0 +1,19 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: Irochi <me@irochi.moe>
+Date: Tue, 25 Oct 2022 01:15:52 +0900
+Subject: [PATCH] Better offline warning message when using Velocity
+
+
+diff --git a/src/main/java/net/minecraft/server/dedicated/DedicatedServer.java b/src/main/java/net/minecraft/server/dedicated/DedicatedServer.java
+index ccfdd2bb39c849a98c974a87c26aca72660982fd..f6355d55f18b0ad496f2058ae225ee35d5e63464 100644
+--- a/src/main/java/net/minecraft/server/dedicated/DedicatedServer.java
++++ b/src/main/java/net/minecraft/server/dedicated/DedicatedServer.java
+@@ -288,6 +288,8 @@ public class DedicatedServer extends MinecraftServer implements ServerInterface
+             if (org.spigotmc.SpigotConfig.bungee) {
+                 DedicatedServer.LOGGER.warn("Whilst this makes it possible to use BungeeCord, unless access to your server is properly restricted, it also opens up the ability for hackers to connect with any username they choose.");
+                 DedicatedServer.LOGGER.warn("Please see http://www.spigotmc.org/wiki/firewall-guide/ for further information.");
++            } else if (io.papermc.paper.configuration.GlobalConfiguration.get().proxies.velocity.enabled) {
++                DedicatedServer.LOGGER.warn("The server is configured to use Velocity. Make sure you have set correct forwarding secret key in both Paper and Velocity's configuration file if using modern forwarding mode.");
+             } else {
+                 DedicatedServer.LOGGER.warn("While this makes the game possible to play without internet access, it also opens up the ability for hackers to connect with any username they choose.");
+             }
