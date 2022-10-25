@@ -1,41 +1,21 @@
 From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
 From: Irochi <me@irochi.moe>
-Date: Mon, 1 Aug 2022 22:58:11 +0900
+Date: Tue, 25 Oct 2022 12:54:35 +0900
 Subject: [PATCH] Implement TPSBar
 
-Original by PurpurMC Team
-
-Copyright (C) 2022 PurpurMC LLC
-
-Permission is hereby granted, free of charge, to any person obtaining a
-copy of this software and associated documentation files (the
-Software), to deal in the Software without restriction, including
-without limitation the rights to use, copy, modify, merge, publish,
-distribute, sublicense, and/or sell copies of the Software, and to
-permit persons to whom the Software is furnished to do so, subject to
-the following conditions:
-
-The above copyright notice and this permission notice shall be included
-in all copies or substantial portions of the Software.
-
-THE SOFTWARE IS PROVIDED AS IS, WITHOUT WARRANTY OF ANY KIND, EXPRESS
-OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
-MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
-IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY
-CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT,
-TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
-SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 diff --git a/src/main/java/moe/irochi/rubia/command/TPSBarCommand.java b/src/main/java/moe/irochi/rubia/command/TPSBarCommand.java
 new file mode 100644
-index 0000000000000000000000000000000000000000..b64ecc3de6bd63596c196b970458838e03b93769
+index 0000000000000000000000000000000000000000..b318f0bafee2dc1d64ae0a10e50d33fa5c6ece6c
 --- /dev/null
 +++ b/src/main/java/moe/irochi/rubia/command/TPSBarCommand.java
-@@ -0,0 +1,41 @@
+@@ -0,0 +1,259 @@
 +package moe.irochi.rubia.command;
 +
 +import com.mojang.brigadier.CommandDispatcher;
++import moe.irochi.rubia.RubiaCommand;
 +import io.papermc.paper.adventure.PaperAdventure;
++import net.kyori.adventure.bossbar.BossBar;
 +import net.kyori.adventure.text.Component;
 +import net.kyori.adventure.text.format.NamedTextColor;
 +import net.kyori.adventure.text.minimessage.MiniMessage;
@@ -44,307 +24,250 @@ index 0000000000000000000000000000000000000000..b64ecc3de6bd63596c196b970458838e
 +import net.minecraft.commands.Commands;
 +import net.minecraft.commands.arguments.EntityArgument;
 +import net.minecraft.server.level.ServerPlayer;
-+import moe.irochi.rubia.task.TPSBarTask;
++import org.bukkit.Bukkit;
++import org.bukkit.craftbukkit.scheduler.MinecraftInternalPlugin;
++import org.bukkit.entity.Player;
++import org.bukkit.scheduler.BukkitRunnable;
 +import org.jetbrains.annotations.NotNull;
 +
-+import java.util.Collection;
-+import java.util.Collections;
++import java.util.*;
 +
 +public class TPSBarCommand {
++
 +    public static void register(@NotNull CommandDispatcher<CommandSourceStack> dispatcher) {
 +        dispatcher.register(Commands.literal("tpsbar")
-+            .requires(listener -> listener.hasPermission(2, "bukkit.command.tpsbar"))
++            .requires(listener -> listener.hasPermission(2, "bukkit.command.rubia.tpsbar") || listener.hasPermission(2, "bukkit.command.rubia"))
 +            .executes(context -> execute(context.getSource(), Collections.singleton(context.getSource().getPlayerOrException())))
 +            .then(Commands.argument("targets", EntityArgument.players()).executes((context) -> execute(context.getSource(), EntityArgument.getPlayers(context, "targets"))))
 +        );
 +    }
 +
 +    private static int execute(CommandSourceStack sender, @NotNull Collection<ServerPlayer> targets) {
-+        for (ServerPlayer player : targets) {
-+            boolean result = TPSBarTask.instance().togglePlayer(player.getBukkitEntity());
-+            player.tpsBar(result);
-+
-+            sender.sendSuccess(PaperAdventure.asVanilla(MiniMessage.miniMessage().deserialize(
++        Component PREFIX = MiniMessage.miniMessage().deserialize("<aqua>Rubia</aqua><white> • </white>");
++        for (ServerPlayer target : targets) {
++            boolean tpsBar = TPSBarTask.getInstance().togglePlayer(target.getBukkitEntity());
++            target.setTPSBar(tpsBar);
++            sender.sendSuccess(PaperAdventure.asVanilla(PREFIX.append(MiniMessage.miniMessage().deserialize(
 +                "<gray>TPSBar toggled</gray> <toggle> <gray>for</gray> <yellow><target></yellow><gray>.</gray>",
-+                Placeholder.component("toggle", Component.translatable(result ? "options.on" : "options.off").color(result ? NamedTextColor.GREEN : NamedTextColor.RED)),
-+                Placeholder.parsed("target", player.getGameProfile().getName())
-+            )), false);
++                Placeholder.component("toggle", Component.translatable(tpsBar ? "options.on" : "options.off").color(tpsBar ? NamedTextColor.GREEN : NamedTextColor.RED)),
++                Placeholder.parsed("target", target.getGameProfile().getName())
++            ))), false);
 +        }
-+    return targets.size();
++        return targets.size();
 +    }
-+}
-diff --git a/src/main/java/moe/irochi/rubia/task/BossBarTask.java b/src/main/java/moe/irochi/rubia/task/BossBarTask.java
-new file mode 100644
-index 0000000000000000000000000000000000000000..3f5025755cc3aa1c852965c619390a3ed84683e5
---- /dev/null
-+++ b/src/main/java/moe/irochi/rubia/task/BossBarTask.java
-@@ -0,0 +1,109 @@
-+package moe.irochi.rubia.task;
 +
-+import net.kyori.adventure.bossbar.BossBar;
-+import net.minecraft.server.level.ServerPlayer;
-+import org.bukkit.Bukkit;
-+import org.bukkit.craftbukkit.scheduler.MinecraftInternalPlugin;
-+import org.bukkit.entity.Player;
-+import org.bukkit.scheduler.BukkitRunnable;
++    public static class TPSBarTask extends BukkitRunnable {
 +
-+import java.util.HashMap;
-+import java.util.HashSet;
-+import java.util.Iterator;
-+import java.util.Map;
-+import java.util.UUID;
-+
-+public abstract class BossBarTask extends BukkitRunnable {
-+    private final Map<UUID, BossBar> bossbars = new HashMap<>();
-+    private boolean started;
-+
-+    abstract BossBar createBossBar();
-+
-+    abstract void updateBossBar(BossBar bossbar, Player player);
-+
-+    @Override
-+    public void run() {
-+        Iterator<Map.Entry<UUID, BossBar>> iter = bossbars.entrySet().iterator();
-+        while (iter.hasNext()) {
-+            Map.Entry<UUID, BossBar> entry = iter.next();
-+            Player player = Bukkit.getPlayer(entry.getKey());
-+            if (player == null) {
-+                iter.remove();
-+                continue;
-+            }
-+            updateBossBar(entry.getValue(), player);
++        public enum FillMode {
++            TPS,
++            MSPT,
++            PING
 +        }
-+    }
 +
-+    @Override
-+    public void cancel() {
-+        super.cancel();
-+        new HashSet<>(this.bossbars.keySet()).forEach(uuid -> {
-+            Player player = Bukkit.getPlayer(uuid);
-+            if (player != null) {
-+                removePlayer(player);
++        private static TPSBarTask instance;
++
++        private final Map<UUID, BossBar> tpsBars = new HashMap<>();
++        private boolean started;
++
++        private double tps = 20.0d;
++        private double mspt = 0.0d;
++        private int tick = 0;
++
++        public static TPSBarTask getInstance() {
++            if (instance == null) instance = new TPSBarTask();
++            return instance;
++        }
++
++    private static String tpsBarTitle = "<gray>TPS<yellow>:</yellow> <tps> MSPT<yellow>:</yellow> <mspt> Ping<yellow>:</yellow> <ping>ms";
++    private static BossBar.Overlay tpsBarOverlay = BossBar.Overlay.NOTCHED_20;
++
++        public BossBar createTPSBar() {
++            return BossBar.bossBar(Component.text(""), 0.0f, getInstance().getTPSBarColour(), tpsBarOverlay);
++        }
++
++        public void updateTPSBar(@NotNull BossBar tpsBar, @NotNull Player target) {
++            tpsBar.progress(getTPSBarProgress());
++            tpsBar.color(getTPSBarColour());
++            tpsBar.name(
++                    MiniMessage.miniMessage().deserialize(
++                            tpsBarTitle,
++                            Placeholder.component("tps", getTPSColour()),
++                            Placeholder.component("mspt", getMSPTColour()),
++                            Placeholder.component("ping", getPingColour(target.getPing()))
++                    )
++            );
++        }
++
++        @Override
++        public void run() {
++            if (++tick < 20) return;
++
++            tick = 0;
++            tps = Math.max(Math.min(Bukkit.getTPS()[0], 20.0d), 0.0d);
++            mspt = Bukkit.getAverageTickTime();
++
++            Iterator<Map.Entry<UUID, BossBar>> iterator = tpsBars.entrySet().iterator();
++            while (iterator.hasNext()) {
++                Map.Entry<UUID, BossBar> tpsBar = iterator.next();
++                Player target = Bukkit.getPlayer(tpsBar.getKey());
++                if (target == null) {
++                    iterator.remove();
++                    continue;
++                }
++                updateTPSBar(tpsBar.getValue(), target);
 +            }
-+        });
-+        this.bossbars.clear();
-+    }
++        }
 +
-+    public boolean removePlayer(Player player) {
-+        BossBar bossbar = this.bossbars.remove(player.getUniqueId());
-+        if (bossbar != null) {
-+            player.hideBossBar(bossbar);
++        @Override
++        public synchronized void cancel() throws IllegalStateException {
++            super.cancel();
++            new HashSet<>(tpsBars.keySet()).forEach(uuid -> {
++                Player target = Bukkit.getPlayer(uuid);
++                if (target != null) removePlayer(target);
++            });
++            tpsBars.clear();
++        }
++
++        public void start() {
++            stop();
++            runTaskTimerAsynchronously(new MinecraftInternalPlugin(), 1, 1);
++            started = true;
++        }
++
++        public void stop() {
++            if (started) cancel();
++        }
++
++        public static void startAll() {
++            getInstance().start();
++        }
++
++        public static void stopAll() {
++            getInstance().stop();
++        }
++
++        public void addPlayer(Player target) {
++            removePlayer(target);
++            BossBar tpsBar = createTPSBar();
++            tpsBars.put(target.getUniqueId(), tpsBar);
++            updateTPSBar(tpsBar, target);
++            target.showBossBar(tpsBar);
++        }
++
++        public static void addToAll(@NotNull ServerPlayer vanillaTarget) {
++            if (vanillaTarget.getTPSBar()) getInstance().removePlayer(vanillaTarget.getBukkitEntity());
++        }
++
++        public boolean removePlayer(@NotNull Player target) {
++            BossBar tpsBar = tpsBars.remove(target.getUniqueId());
++            if (tpsBar != null) {
++                target.hideBossBar(tpsBar);
++                return true;
++            }
++            return false;
++        }
++
++        public static void removeFromAll(Player target) {
++            getInstance().removePlayer(target);
++        }
++
++        public boolean togglePlayer(Player target) {
++            if (removePlayer(target)) return false;
++            addPlayer(target);
 +            return true;
 +        }
-+        return false;
-+    }
 +
-+    public void addPlayer(Player player) {
-+        removePlayer(player);
-+        BossBar bossbar = createBossBar();
-+        this.bossbars.put(player.getUniqueId(), bossbar);
-+        this.updateBossBar(bossbar, player);
-+        player.showBossBar(bossbar);
-+    }
++    private static TPSBarTask.FillMode tpsBarMode = TPSBarTask.FillMode.MSPT;
 +
-+    public boolean hasPlayer(UUID uuid) {
-+        return this.bossbars.containsKey(uuid);
-+    }
-+
-+    public boolean togglePlayer(Player player) {
-+        if (removePlayer(player)) {
-+            return false;
-+        }
-+        addPlayer(player);
-+        return true;
-+    }
-+
-+    public void start() {
-+        stop();
-+        this.runTaskTimerAsynchronously(new MinecraftInternalPlugin(), 1, 1);
-+        started = true;
-+    }
-+
-+    public void stop() {
-+        if (started) {
-+            cancel();
-+        }
-+    }
-+
-+    public static void startAll() {
-+        TPSBarTask.instance().start();
-+    }
-+
-+    public static void stopAll() {
-+        TPSBarTask.instance().stop();
-+    }
-+
-+    public static void addToAll(ServerPlayer player) {
-+        Player bukkit = player.getBukkitEntity();
-+        if (player.tpsBar()) {
-+            TPSBarTask.instance().addPlayer(bukkit);
-+        }
-+    }
-+
-+    public static void removeFromAll(Player player) {
-+        TPSBarTask.instance().removePlayer(player);
-+    }
-+}
-diff --git a/src/main/java/moe/irochi/rubia/task/TPSBarTask.java b/src/main/java/moe/irochi/rubia/task/TPSBarTask.java
-new file mode 100644
-index 0000000000000000000000000000000000000000..ecea808bd28f6f73a41a5966c93a92eaf23bd03f
---- /dev/null
-+++ b/src/main/java/moe/irochi/rubia/task/TPSBarTask.java
-@@ -0,0 +1,152 @@
-+package moe.irochi.rubia.task;
-+
-+import net.kyori.adventure.bossbar.BossBar;
-+import net.kyori.adventure.text.Component;
-+import net.kyori.adventure.text.minimessage.MiniMessage;
-+import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder;
-+import org.bukkit.Bukkit;
-+import org.bukkit.entity.Player;
-+
-+public class TPSBarTask extends BossBarTask {
-+    private static TPSBarTask instance;
-+    private double tps = 20.0D;
-+    private double mspt = 0.0D;
-+    private int tick = 0;
-+
-+    public static BossBar.Overlay commandTPSBarProgressOverlay = BossBar.Overlay.NOTCHED_20;
-+    public static String commandTPSBarTitle = "<gray>TPS<yellow>:</yellow> <tps> MSPT<yellow>:</yellow> <mspt> Ping<yellow>:</yellow> <ping>ms";
-+    public static int commandTPSBarTickInterval = 20;
-+    public static TPSBarTask.FillMode commandTPSBarProgressFillMode = TPSBarTask.FillMode.MSPT;
-+    public static BossBar.Color commandTPSBarProgressColorGood = BossBar.Color.GREEN;
-+    public static BossBar.Color commandTPSBarProgressColorMedium = BossBar.Color.YELLOW;
-+    public static BossBar.Color commandTPSBarProgressColorLow = BossBar.Color.RED;
-+    public static String commandTPSBarTextColorGood = "<gradient:#55ff55:#00aa00><text></gradient>";
-+    public static String commandTPSBarTextColorMedium = "<gradient:#ffff55:#ffaa00><text></gradient>";
-+    public static String commandTPSBarTextColorLow = "<gradient:#ff5555:#aa0000><text></gradient>";
-+
-+    public static TPSBarTask instance() {
-+        if (instance == null) {
-+            instance = new TPSBarTask();
-+        }
-+        return instance;
-+    }
-+
-+    @Override
-+    BossBar createBossBar() {
-+        return BossBar.bossBar(Component.text(""), 0.0F, instance().getBossBarColor(), commandTPSBarProgressOverlay);
-+    }
-+
-+    @Override
-+    void updateBossBar(BossBar bossbar, Player player) {
-+        bossbar.progress(getBossBarProgress());
-+        bossbar.color(getBossBarColor());
-+        bossbar.name(MiniMessage.miniMessage().deserialize(commandTPSBarTitle,
-+                Placeholder.component("tps", getTPSColor()),
-+                Placeholder.component("mspt", getMSPTColor()),
-+                Placeholder.component("ping", getPingColor(player.getPing()))
-+        ));
-+    }
-+
-+    @Override
-+    public void run() {
-+        if (++tick < commandTPSBarTickInterval) {
-+            return;
-+        }
-+        tick = 0;
-+
-+        this.tps = Math.max(Math.min(Bukkit.getTPS()[0], 20.0D), 0.0D);
-+        this.mspt = Bukkit.getAverageTickTime();
-+
-+        super.run();
-+    }
-+
-+    private float getBossBarProgress() {
-+        if (commandTPSBarProgressFillMode == FillMode.MSPT) {
-+            return Math.max(Math.min((float) mspt / 50.0F, 1.0F), 0.0F);
-+        } else {
++        private float getTPSBarProgress() {
++            if (tpsBarMode == FillMode.MSPT) return Math.max(Math.min((float) mspt / 50.0F, 1.0F), 0.0F);
 +            return Math.max(Math.min((float) tps / 20.0F, 1.0F), 0.0F);
 +        }
-+    }
 +
-+    private BossBar.Color getBossBarColor() {
-+        if (isGood(commandTPSBarProgressFillMode)) {
-+            return commandTPSBarProgressColorGood;
-+        } else if (isMedium(commandTPSBarProgressFillMode)) {
-+            return commandTPSBarProgressColorMedium;
-+        } else {
-+            return commandTPSBarProgressColorLow;
++    private static BossBar.Color tpsBarColourGood = BossBar.Color.GREEN;
++    private static BossBar.Color tpsBarColourMed = BossBar.Color.YELLOW;
++    private static BossBar.Color tpsBarColourLow = BossBar.Color.RED;
++
++        private BossBar.Color getTPSBarColour() {
++            if (isGood(tpsBarMode)) {
++                return tpsBarColourGood;
++            } else if (isMedium(tpsBarMode)) {
++                return tpsBarColourMed;
++            }
++            return tpsBarColourLow;
 +        }
-+    }
 +
-+    private boolean isGood(FillMode mode) {
-+        return isGood(mode, 0);
-+    }
++    private static String tpsBarTextColourGood = "<gradient:#55ff55:#00aa00><text></gradient>";
++    private static String tpsBarTextColourMed = "<gradient:#ffff55:#ffaa00><text></gradient>";
++    private static String tpsBarTextColourLow = "<gradient:#ff5555:#aa0000><text></gradient>";
 +
-+    private boolean isGood(FillMode mode, int ping) {
-+        if (mode == FillMode.MSPT) {
-+            return mspt < 40;
-+        } else if (mode == FillMode.TPS) {
-+            return tps >= 19;
-+        } else if (mode == FillMode.PING) {
-+            return ping < 100;
-+        } else {
++        private @NotNull Component getTPSColour() {
++            if (isGood(FillMode.TPS)) {
++                return MiniMessage.miniMessage().deserialize(tpsBarTextColourGood, Placeholder.parsed("text", String.format("%.2f", tps)));
++            } else if (isMedium(FillMode.TPS)) {
++                return MiniMessage.miniMessage().deserialize(tpsBarTextColourMed, Placeholder.parsed("text", String.format("%.2f", tps)));
++            }
++            return MiniMessage.miniMessage().deserialize(tpsBarTextColourLow, Placeholder.parsed("text", String.format("%.2f", tps)));
++        }
++
++        private @NotNull Component getMSPTColour() {
++            if (isGood(FillMode.MSPT)) {
++                return MiniMessage.miniMessage().deserialize(tpsBarTextColourGood, Placeholder.parsed("text", String.format("%.2f", mspt)));
++            } else if (isMedium(FillMode.MSPT)) {
++                return MiniMessage.miniMessage().deserialize(tpsBarTextColourMed, Placeholder.parsed("text", String.format("%.2f", mspt)));
++            }
++            return MiniMessage.miniMessage().deserialize(tpsBarTextColourLow, Placeholder.parsed("text", String.format("%.2f", mspt)));
++        }
++
++        private @NotNull Component getPingColour(int ping) {
++            if (isGood(FillMode.PING)) {
++                return MiniMessage.miniMessage().deserialize(tpsBarTextColourGood, Placeholder.parsed("text", String.format("%s", ping)));
++            } else if (isMedium(FillMode.PING)) {
++                return MiniMessage.miniMessage().deserialize(tpsBarTextColourMed, Placeholder.parsed("text", String.format("%s", ping)));
++            }
++            return MiniMessage.miniMessage().deserialize(tpsBarTextColourLow, Placeholder.parsed("text", String.format("%s", ping)));
++        }
++
++        private boolean isGood(FillMode mode) {
++            return isGood(mode, 0);
++        }
++
++        private boolean isGood(@NotNull FillMode mode, int ping) {
++            switch (mode) {
++                case MSPT -> {
++                    return mspt < 40;
++                }
++                case TPS -> {
++                    return tps >= 19;
++                }
++                case PING -> {
++                    return ping < 100;
++                }
++            }
 +            return false;
 +        }
-+    }
 +
-+    private boolean isMedium(FillMode mode) {
-+        return isMedium(mode, 0);
-+    }
++        private boolean isMedium(FillMode mode) {
++            return isMedium(mode, 0);
++        }
 +
-+    private boolean isMedium(FillMode mode, int ping) {
-+        if (mode == FillMode.MSPT) {
-+            return mspt < 50;
-+        } else if (mode == FillMode.TPS) {
-+            return tps >= 15;
-+        } else if (mode == FillMode.PING) {
-+            return ping < 200;
-+        } else {
++        private boolean isMedium(@NotNull FillMode mode, int ping) {
++            switch (mode) {
++                case MSPT -> {
++                    return mspt < 50;
++                }
++                case TPS -> {
++                    return tps >= 15;
++                }
++                case PING -> {
++                    return ping < 200;
++                }
++            }
 +            return false;
 +        }
++
 +    }
 +
-+    private Component getTPSColor() {
-+        String color;
-+        if (isGood(FillMode.TPS)) {
-+            color = commandTPSBarTextColorGood;
-+        } else if (isMedium(FillMode.TPS)) {
-+            color = commandTPSBarTextColorMedium;
-+        } else {
-+            color = commandTPSBarTextColorLow;
-+        }
-+        return MiniMessage.miniMessage().deserialize(color, Placeholder.parsed("text", String.format("%.2f", tps)));
-+    }
-+
-+    private Component getMSPTColor() {
-+        String color;
-+        if (isGood(FillMode.MSPT)) {
-+            color = commandTPSBarTextColorGood;
-+        } else if (isMedium(FillMode.MSPT)) {
-+            color = commandTPSBarTextColorMedium;
-+        } else {
-+            color = commandTPSBarTextColorLow;
-+        }
-+        return MiniMessage.miniMessage().deserialize(color, Placeholder.parsed("text", String.format("%.2f", mspt)));
-+    }
-+
-+    private Component getPingColor(int ping) {
-+        String color;
-+        if (isGood(FillMode.PING, ping)) {
-+            color = commandTPSBarTextColorGood;
-+        } else if (isMedium(FillMode.PING, ping)) {
-+            color = commandTPSBarTextColorMedium;
-+        } else {
-+            color = commandTPSBarTextColorLow;
-+        }
-+        return MiniMessage.miniMessage().deserialize(color, Placeholder.parsed("text", String.format("%s", ping)));
-+    }
-+
-+    public enum FillMode {
-+        TPS, MSPT, PING
-+    }
 +}
 diff --git a/src/main/java/net/minecraft/commands/Commands.java b/src/main/java/net/minecraft/commands/Commands.java
 index 7c96f7fc5997761426a0c62cad0cab5cc668f282..058ad465d0255c20fdcc32c7284907f91cb1ea1f 100644
@@ -359,49 +282,31 @@ index 7c96f7fc5997761426a0c62cad0cab5cc668f282..058ad465d0255c20fdcc32c7284907f9
  
          if (environment.includeIntegrated) {
 diff --git a/src/main/java/net/minecraft/server/MinecraftServer.java b/src/main/java/net/minecraft/server/MinecraftServer.java
-index a36a65539ae0ae6c2d6cc67fc19c2dc68c97bb49..83fdf7aabf1bb87ec08310190a678aafa6461249 100644
+index a36a65539ae0ae6c2d6cc67fc19c2dc68c97bb49..ca58be22074357d0b161a9ac28ae5fa4084588c1 100644
 --- a/src/main/java/net/minecraft/server/MinecraftServer.java
 +++ b/src/main/java/net/minecraft/server/MinecraftServer.java
-@@ -182,6 +182,8 @@ import org.bukkit.event.server.ServerLoadEvent;
- 
- import co.aikar.timings.MinecraftTimings; // Paper
- 
-+import moe.irochi.rubia.task.BossBarTask; // Rubia
-+
- public abstract class MinecraftServer extends ReentrantBlockableEventLoop<TickTask> implements CommandSource, AutoCloseable {
- 
-     private static MinecraftServer SERVER; // Paper
-@@ -1019,6 +1021,7 @@ public abstract class MinecraftServer extends ReentrantBlockableEventLoop<TickTa
+@@ -1019,6 +1019,7 @@ public abstract class MinecraftServer extends ReentrantBlockableEventLoop<TickTa
          this.safeShutdown(flag, false);
      }
      public void safeShutdown(boolean flag, boolean isRestarting) {
-+        moe.irochi.rubia.task.BossBarTask.stopAll(); // Rubia
++        moe.irochi.rubia.command.TPSBarCommand.TPSBarTask.stopAll(); // Rubia
          this.isRestarting = isRestarting;
          this.hasLoggedStop = true; // Paper
          if (isDebugging()) io.papermc.paper.util.TraceUtil.dumpTraceForThread("Server stopped"); // Paper
 diff --git a/src/main/java/net/minecraft/server/dedicated/DedicatedServer.java b/src/main/java/net/minecraft/server/dedicated/DedicatedServer.java
-index 2932d2bb797a49e904cebec4285d24d69b429cd9..ccfdd2bb39c849a98c974a87c26aca72660982fd 100644
+index 79178a522a173f298c088f02d251167382455d7d..c6814c7cdc24d074518cb312ecc9cad773637047 100644
 --- a/src/main/java/net/minecraft/server/dedicated/DedicatedServer.java
 +++ b/src/main/java/net/minecraft/server/dedicated/DedicatedServer.java
-@@ -69,6 +69,8 @@ import org.bukkit.craftbukkit.util.Waitable;
- import org.bukkit.event.server.RemoteServerCommandEvent;
- // CraftBukkit end
- 
-+import moe.irochi.rubia.task.BossBarTask; // Rubia
-+
- public class DedicatedServer extends MinecraftServer implements ServerInterface {
- 
-     static final Logger LOGGER = LogUtils.getLogger();
-@@ -338,6 +340,7 @@ public class DedicatedServer extends MinecraftServer implements ServerInterface
+@@ -341,6 +341,7 @@ public class DedicatedServer extends MinecraftServer implements ServerInterface
                  DedicatedServer.LOGGER.info("JMX monitoring enabled");
              }
  
-+            moe.irochi.rubia.task.BossBarTask.startAll(); // Rubia
++            moe.irochi.rubia.command.TPSBarCommand.TPSBarTask.startAll(); // Rubia
              return true;
          }
      }
 diff --git a/src/main/java/net/minecraft/server/level/ServerPlayer.java b/src/main/java/net/minecraft/server/level/ServerPlayer.java
-index e5af7ef4ada68922a70f593ccec555ecb50627a9..921675061c5ea8f7e9d6ba3f83e1fe5d83da0a75 100644
+index 961d25bbf868438bf5e5257bad745c8208a01171..af0e40e3f59e643fcb5dc537c91abc3d1d9955be 100644
 --- a/src/main/java/net/minecraft/server/level/ServerPlayer.java
 +++ b/src/main/java/net/minecraft/server/level/ServerPlayer.java
 @@ -261,6 +261,7 @@ public class ServerPlayer extends Player {
@@ -416,7 +321,7 @@ index e5af7ef4ada68922a70f593ccec555ecb50627a9..921675061c5ea8f7e9d6ba3f83e1fe5d
              }
          }
  
-+        if (nbt.contains("Rubia.TPSBar")) { this.tpsBar = nbt.getBoolean("Rubia.TPSBar"); } // Rubia
++         if (nbt.contains("Rubia.TPSBar")) this.tpsBar = nbt.getBoolean("Rubia.TPSBar"); // Rubia
      }
  
      @Override
@@ -433,42 +338,33 @@ index e5af7ef4ada68922a70f593ccec555ecb50627a9..921675061c5ea8f7e9d6ba3f83e1fe5d
      }
      // CraftBukkit end
 +
-+    // Rubia start
-+    public boolean tpsBar() {
++    // Rubia start - TPSBar methods.
++    public boolean getTPSBar() {
 +        return this.tpsBar;
 +    }
 +
-+    public void tpsBar(boolean tpsBar) {
++    public void setTPSBar(boolean tpsBar) {
 +        this.tpsBar = tpsBar;
 +    }
 +    // Rubia end
  }
 diff --git a/src/main/java/net/minecraft/server/players/PlayerList.java b/src/main/java/net/minecraft/server/players/PlayerList.java
-index 06eda955f96b5fe2d08ed0d39229c7a6ebb88931..4b8bd75aa2c20e246ccc14427dd3841f1a2c7d4c 100644
+index 06eda955f96b5fe2d08ed0d39229c7a6ebb88931..ce44f3e75e1a1b7fc4f13840b77379dadc085c7e 100644
 --- a/src/main/java/net/minecraft/server/players/PlayerList.java
 +++ b/src/main/java/net/minecraft/server/players/PlayerList.java
-@@ -122,6 +122,8 @@ import org.bukkit.event.player.PlayerQuitEvent;
- import org.bukkit.event.player.PlayerRespawnEvent;
- // CraftBukkit end
- 
-+import moe.irochi.rubia.task.BossBarTask; // Rubia
-+
- public abstract class PlayerList {
- 
-     public static final File USERBANLIST_FILE = new File("banned-players.json");
-@@ -503,6 +505,7 @@ public abstract class PlayerList {
+@@ -503,6 +503,7 @@ public abstract class PlayerList {
              scoreboard.addPlayerToTeam(player.getScoreboardName(), collideRuleTeam);
          }
          // Paper end
-+        moe.irochi.rubia.task.BossBarTask.addToAll(player); // Rubia
++        moe.irochi.rubia.command.TPSBarCommand.TPSBarTask.addToAll(player); // Rubia
          // CraftBukkit - Moved from above, added world
          PlayerList.LOGGER.info("{}[{}] logged in with entity id {} at ([{}]{}, {}, {})", player.getName().getString(), s1, player.getId(), worldserver1.serverLevelData.getLevelName(), player.getX(), player.getY(), player.getZ());
      }
-@@ -613,6 +616,8 @@ public abstract class PlayerList {
+@@ -613,6 +614,8 @@ public abstract class PlayerList {
      }
      public net.kyori.adventure.text.Component remove(ServerPlayer entityplayer, net.kyori.adventure.text.Component leaveMessage) {
          // Paper end
-+        moe.irochi.rubia.task.BossBarTask.removeFromAll(entityplayer.getBukkitEntity()); // Rubia
++        moe.irochi.rubia.command.TPSBarCommand.TPSBarTask.removeFromAll(entityplayer.getBukkitEntity()); // Rubia
 +
          ServerLevel worldserver = entityplayer.getLevel();
  
