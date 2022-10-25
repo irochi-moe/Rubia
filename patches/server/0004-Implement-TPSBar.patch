@@ -3,7 +3,7 @@ From: Irochi <me@irochi.moe>
 Date: Tue, 25 Oct 2022 12:54:35 +0900
 Subject: [PATCH] Implement TPSBar
 
-Original code by PurpurMC, licensed under MIT
+Original code by PurpurMC and modified by CodeTheDev, licensed under MIT
 You can find the original code on https://github.com/PurpurMC/Purpur
 
 diff --git a/src/main/java/moe/irochi/rubia/command/TPSBarCommand.java b/src/main/java/moe/irochi/rubia/command/TPSBarCommand.java

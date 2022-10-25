@@ -1,0 +1,31 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: Irochi <me@irochi.moe>
+Date: Tue, 25 Oct 2022 15:18:50 +0900
+Subject: [PATCH] Add option to disable out-of-order-chat
+
+
+diff --git a/src/main/java/moe/irochi/rubia/RubiaConfig.java b/src/main/java/moe/irochi/rubia/RubiaConfig.java
+index 6fca938e7fb31c82f90c48ebb45385768f5f21c3..9d705a9b67304044d083b347873290ba7323bf76 100644
+--- a/src/main/java/moe/irochi/rubia/RubiaConfig.java
++++ b/src/main/java/moe/irochi/rubia/RubiaConfig.java
+@@ -132,4 +132,8 @@ public class RubiaConfig {
+         return config.getStringList(key);
+     }
+ 
++	public static boolean disableOutOfOrderChat;
++    private static void miscSettings() {
++		disableOutOfOrderChat = getBoolean("disable-out-of-order-chat", false);
++    }
+ }
+diff --git a/src/main/java/net/minecraft/server/network/ServerGamePacketListenerImpl.java b/src/main/java/net/minecraft/server/network/ServerGamePacketListenerImpl.java
+index 9ad36447e82a3504576f6c10cb297514a2f69289..7245d416fd1543ec417051c6f496672e38b4c725 100644
+--- a/src/main/java/net/minecraft/server/network/ServerGamePacketListenerImpl.java
++++ b/src/main/java/net/minecraft/server/network/ServerGamePacketListenerImpl.java
+@@ -2364,6 +2364,7 @@ public class ServerGamePacketListenerImpl implements ServerPlayerConnection, Tic
+     }
+ 
+     private boolean updateChatOrder(Instant timestamp) {
++        if (moe.irochi.rubia.RubiaConfig.disableOutOfOrderChat) return true;
+         Instant instant1;
+ 
+         do {

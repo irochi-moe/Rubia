@@ -131,7 +131,7 @@ index 0000000000000000000000000000000000000000..924179c6a891940c025d27283bd8f7ca
 +}
 diff --git a/src/main/java/moe/irochi/rubia/RubiaConfig.java b/src/main/java/moe/irochi/rubia/RubiaConfig.java
 new file mode 100644
-index 0000000000000000000000000000000000000000..3fe46d32acad0dcb1e2e64b301a4efb50431cb7d
+index 0000000000000000000000000000000000000000..6fca938e7fb31c82f90c48ebb45385768f5f21c3
 --- /dev/null
 +++ b/src/main/java/moe/irochi/rubia/RubiaConfig.java
 @@ -0,0 +1,135 @@
@@ -152,126 +152,126 @@ index 0000000000000000000000000000000000000000..3fe46d32acad0dcb1e2e64b301a4efb5
 +import org.simpleyaml.exceptions.InvalidConfigurationException;
 +
 +public class RubiaConfig {
-+	
-+	private static final YamlFile config = new YamlFile();
-+	private static int updates = 0;
-+	
-+	private static ConfigurationSection convertToBukkit(org.simpleyaml.configuration.ConfigurationSection section) {
-+		ConfigurationSection newSection = new MemoryConfiguration();
-+		for (String key : section.getKeys(false)) {
-+			if (section.isConfigurationSection(key)) {
-+				newSection.set(key, convertToBukkit(section.getConfigurationSection(key)));
-+			} else {
-+				newSection.set(key, section.get(key));
-+			}
-+		}
-+		return newSection;
-+	}
-+	
-+	public static ConfigurationSection getConfigCopy() {
-+		return convertToBukkit(config);
-+	}
-+	
-+	public static int getUpdates() {
-+		return updates;
-+	}
-+	
-+	public static void load() throws IOException {
-+		File configFile = new File("rubia.yml");
-+		
-+		if (configFile.exists()) {
-+			try {
-+				config.load(configFile);
-+			} catch (InvalidConfigurationException e) {
-+				throw new IOException(e);
-+			}
-+		}
-+		
-+		getString("info.version", "1.0");
-+		setComment("info",
-+				"Rubia Configuration",
-+				"Rubia. Personal Paper fork by Irochi.",
-+				"",
-+				"https://irochi.moe");
-+		
-+		for (Method method : RubiaConfig.class.getDeclaredMethods()) {
-+			if (Modifier.isStatic(method.getModifiers()) && Modifier.isPrivate(method.getModifiers()) && method.getParameterCount() == 0 &&
-+					method.getReturnType() == Void.TYPE && !method.getName().startsWith("lambda")) {
-+				method.setAccessible(true);
-+				try {
-+					method.invoke(null);
-+				} catch (Throwable t) {
-+					MinecraftServer.LOGGER.warn("Failed to load configuration option from " + method.getName(), t);
-+				}
-+			}
-+		}
-+		
-+		updates++;
-+		
-+		config.save(configFile);
-+	}
-+	
-+	private static void setComment(String key, String... comment) {
-+		if (config.contains(key)) {
-+			config.setComment(key, String.join("\n", comment), CommentType.BLOCK);
-+		}
-+	}
-+	
-+	private static void ensureDefault(String key, Object defaultValue, String... comment) {
-+		if (!config.contains(key)) {
-+			config.set(key, defaultValue);
-+			config.setComment(key, String.join("\n", comment), CommentType.BLOCK);
-+		}
-+	}
-+	
-+	private static boolean getBoolean(String key, boolean defaultValue, String... comment) {
-+		return getBoolean(key, null, defaultValue, comment);
-+	}
-+	
-+	private static boolean getBoolean(String key, @Nullable String oldKey, boolean defaultValue, String... comment) {
-+		ensureDefault(key, defaultValue, comment);
-+		return config.getBoolean(key, defaultValue);
-+	}
-+	
-+	private static int getInt(String key, int defaultValue, String... comment) {
-+		return getInt(key, null, defaultValue, comment);
-+	}
-+	
-+	private static int getInt(String key, @Nullable String oldKey, int defaultValue, String... comment) {
-+		ensureDefault(key, defaultValue, comment);
-+		return config.getInt(key, defaultValue);
-+	}
-+	
-+	private static double getDouble(String key, double defaultValue, String... comment) {
-+		return getDouble(key, null, defaultValue, comment);
-+	}
-+	
-+	private static double getDouble(String key, @Nullable String oldKey, double defaultValue, String... comment) {
-+		ensureDefault(key, defaultValue, comment);
-+		return config.getDouble(key, defaultValue);
-+	}
-+	
-+	private static String getString(String key, String defaultValue, String... comment) {
-+		return getOldString(key, null, defaultValue, comment);
-+	}
-+	
-+	private static String getOldString(String key, @Nullable String oldKey, String defaultValue, String... comment) {
-+		ensureDefault(key, defaultValue, comment);
-+		return config.getString(key, defaultValue);
-+	}
-+	
-+	private static List<String> getStringList(String key, List<String> defaultValue, String... comment) {
-+		return getStringList(key, null, defaultValue, comment);
-+	}
-+	
-+	private static List<String> getStringList(String key, @Nullable String oldKey, List<String> defaultValue, String... comment) {
-+		ensureDefault(key, defaultValue, comment);
-+		return config.getStringList(key);
-+	}
-+	
++
++    private static final YamlFile config = new YamlFile();
++    private static int updates = 0;
++    
++    private static ConfigurationSection convertToBukkit(org.simpleyaml.configuration.ConfigurationSection section) {
++        ConfigurationSection newSection = new MemoryConfiguration();
++        for (String key : section.getKeys(false)) {
++            if (section.isConfigurationSection(key)) {
++                newSection.set(key, convertToBukkit(section.getConfigurationSection(key)));
++            } else {
++                newSection.set(key, section.get(key));
++            }
++        }
++        return newSection;
++    }
++
++    public static ConfigurationSection getConfigCopy() {
++        return convertToBukkit(config);
++    }
++
++    public static int getUpdates() {
++        return updates;
++    }
++
++    public static void load() throws IOException {
++        File configFile = new File("rubia.yml");
++        
++        if (configFile.exists()) {
++            try {
++                config.load(configFile);
++            } catch (InvalidConfigurationException e) {
++                throw new IOException(e);
++            }
++        }
++
++        getString("info.version", "1.0");
++        setComment("info",
++                "Rubia Configuration",
++                "Rubia. Personal Paper fork by Irochi.",
++                "",
++                "https://irochi.moe");
++
++        for (Method method : RubiaConfig.class.getDeclaredMethods()) {
++            if (Modifier.isStatic(method.getModifiers()) && Modifier.isPrivate(method.getModifiers()) && method.getParameterCount() == 0 &&
++                    method.getReturnType() == Void.TYPE && !method.getName().startsWith("lambda")) {
++                method.setAccessible(true);
++                try {
++                    method.invoke(null);
++                } catch (Throwable t) {
++                    MinecraftServer.LOGGER.warn("Failed to load configuration option from " + method.getName(), t);
++                }
++            }
++        }
++
++        updates++;
++
++        config.save(configFile);
++    }
++
++    private static void setComment(String key, String... comment) {
++        if (config.contains(key)) {
++            config.setComment(key, String.join("\n", comment), CommentType.BLOCK);
++        }
++    }
++
++    private static void ensureDefault(String key, Object defaultValue, String... comment) {
++        if (!config.contains(key)) {
++            config.set(key, defaultValue);
++            config.setComment(key, String.join("\n", comment), CommentType.BLOCK);
++        }
++    }
++
++    private static boolean getBoolean(String key, boolean defaultValue, String... comment) {
++        return getBoolean(key, null, defaultValue, comment);
++    }
++
++    private static boolean getBoolean(String key, @Nullable String oldKey, boolean defaultValue, String... comment) {
++        ensureDefault(key, defaultValue, comment);
++        return config.getBoolean(key, defaultValue);
++    }
++
++    private static int getInt(String key, int defaultValue, String... comment) {
++        return getInt(key, null, defaultValue, comment);
++    }
++
++    private static int getInt(String key, @Nullable String oldKey, int defaultValue, String... comment) {
++        ensureDefault(key, defaultValue, comment);
++        return config.getInt(key, defaultValue);
++    }
++
++    private static double getDouble(String key, double defaultValue, String... comment) {
++        return getDouble(key, null, defaultValue, comment);
++    }
++
++    private static double getDouble(String key, @Nullable String oldKey, double defaultValue, String... comment) {
++        ensureDefault(key, defaultValue, comment);
++        return config.getDouble(key, defaultValue);
++    }
++
++    private static String getString(String key, String defaultValue, String... comment) {
++        return getOldString(key, null, defaultValue, comment);
++    }
++
++    private static String getOldString(String key, @Nullable String oldKey, String defaultValue, String... comment) {
++        ensureDefault(key, defaultValue, comment);
++        return config.getString(key, defaultValue);
++    }
++
++    private static List<String> getStringList(String key, List<String> defaultValue, String... comment) {
++        return getStringList(key, null, defaultValue, comment);
++    }
++
++    private static List<String> getStringList(String key, @Nullable String oldKey, List<String> defaultValue, String... comment) {
++        ensureDefault(key, defaultValue, comment);
++        return config.getStringList(key);
++    }
++
 +}
 diff --git a/src/main/java/net/minecraft/server/dedicated/DedicatedServer.java b/src/main/java/net/minecraft/server/dedicated/DedicatedServer.java
-index 2932d2bb797a49e904cebec4285d24d69b429cd9..79178a522a173f298c088f02d251167382455d7d 100644
+index ff3eced0e20c39b825586897ee2fed01dd471d88..2ed35d61fead512d1ab2888e16ac7cc011dde047 100644
 --- a/src/main/java/net/minecraft/server/dedicated/DedicatedServer.java
 +++ b/src/main/java/net/minecraft/server/dedicated/DedicatedServer.java
 @@ -227,6 +227,9 @@ public class DedicatedServer extends MinecraftServer implements ServerInterface
