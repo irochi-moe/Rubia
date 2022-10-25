@@ -1,0 +1,60 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: Irochi <me@irochi.moe>
+Date: Tue, 25 Oct 2022 15:33:55 +0900
+Subject: [PATCH] Toggleable offline mode warning
+
+
+diff --git a/src/main/java/moe/irochi/rubia/RubiaConfig.java b/src/main/java/moe/irochi/rubia/RubiaConfig.java
+index 2433255f45ca520cd5a6e6f2be9ecaef94b9f186..0948896013e9ec6ea85e3f9398dae16f133e4476 100644
+--- a/src/main/java/moe/irochi/rubia/RubiaConfig.java
++++ b/src/main/java/moe/irochi/rubia/RubiaConfig.java
+@@ -133,7 +133,9 @@ public class RubiaConfig {
+     }
+ 
+     public static boolean disableOutOfOrderChat;
++    public static boolean offlineWarning;
+     private static void miscSettings() {
+         disableOutOfOrderChat = getBoolean("disable-out-of-order-chat", false);
++        offlineWarning = getBoolean("offline-warning", true);
+     }
+ }
+diff --git a/src/main/java/net/minecraft/server/dedicated/DedicatedServer.java b/src/main/java/net/minecraft/server/dedicated/DedicatedServer.java
+index b5b9db87a73ab2b94ea9e11a65782a86623c8115..fdcac176bb1ad78e7de60f38ab15fcdfd7b3aa96 100644
+--- a/src/main/java/net/minecraft/server/dedicated/DedicatedServer.java
++++ b/src/main/java/net/minecraft/server/dedicated/DedicatedServer.java
+@@ -283,19 +283,23 @@ public class DedicatedServer extends MinecraftServer implements ServerInterface
+         // CraftBukkit end
+ 
+         if (!this.usesAuthentication()) {
+-            DedicatedServer.LOGGER.warn("**** SERVER IS RUNNING IN OFFLINE/INSECURE MODE!");
+-            DedicatedServer.LOGGER.warn("The server will make no attempt to authenticate usernames. Beware.");
+-            // Spigot start
+-            if (org.spigotmc.SpigotConfig.bungee) {
+-                DedicatedServer.LOGGER.warn("Whilst this makes it possible to use BungeeCord, unless access to your server is properly restricted, it also opens up the ability for hackers to connect with any username they choose.");
+-                DedicatedServer.LOGGER.warn("Please see http://www.spigotmc.org/wiki/firewall-guide/ for further information.");
+-            } else if (io.papermc.paper.configuration.GlobalConfiguration.get().proxies.velocity.enabled) {
+-                DedicatedServer.LOGGER.warn("The server is configured to use Velocity. Make sure you have set correct forwarding secret key in both Paper and Velocity's configuration file."); // Rubia
+-            } else {
+-                DedicatedServer.LOGGER.warn("While this makes the game possible to play without internet access, it also opens up the ability for hackers to connect with any username they choose.");
++            // Rubia start - Toggleable offline mode warning
++            if (moe.irochi.rubia.RubiaConfig.offlineWarning) {
++                DedicatedServer.LOGGER.warn("**** SERVER IS RUNNING IN OFFLINE/INSECURE MODE!");
++                DedicatedServer.LOGGER.warn("The server will make no attempt to authenticate usernames. Beware.");
++                // Spigot start
++                if (org.spigotmc.SpigotConfig.bungee) {
++                    DedicatedServer.LOGGER.warn("Whilst this makes it possible to use BungeeCord, unless access to your server is properly restricted, it also opens up the ability for hackers to connect with any username they choose.");
++                    DedicatedServer.LOGGER.warn("Please see http://www.spigotmc.org/wiki/firewall-guide/ for further information.");
++                } else if (io.papermc.paper.configuration.GlobalConfiguration.get().proxies.velocity.enabled) {
++                    DedicatedServer.LOGGER.warn("The server is configured to use Velocity. Make sure you have set correct forwarding secret key in both Paper and Velocity's configuration file."); // Rubia
++                } else {
++                    DedicatedServer.LOGGER.warn("While this makes the game possible to play without internet access, it also opens up the ability for hackers to connect with any username they choose.");
++                }
++                // Spigot end
++                DedicatedServer.LOGGER.warn("To change this, set \"online-mode\" to \"true\" in the server.properties file.");
+             }
+-            // Spigot end
+-            DedicatedServer.LOGGER.warn("To change this, set \"online-mode\" to \"true\" in the server.properties file.");
++            // Rubia end - Toggleable offline mode warning
+         }
+ 
+ 
