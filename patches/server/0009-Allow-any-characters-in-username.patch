@@ -1,0 +1,34 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: Irochi <me@irochi.moe>
+Date: Fri, 11 Nov 2022 20:46:55 +0900
+Subject: [PATCH] Allow any characters in username
+
+
+diff --git a/src/main/java/moe/irochi/rubia/RubiaConfig.java b/src/main/java/moe/irochi/rubia/RubiaConfig.java
+index 0948896013e9ec6ea85e3f9398dae16f133e4476..fe639caab4f11daa6d1ebb1cf4ba782e9fb3c600 100644
+--- a/src/main/java/moe/irochi/rubia/RubiaConfig.java
++++ b/src/main/java/moe/irochi/rubia/RubiaConfig.java
+@@ -134,8 +134,10 @@ public class RubiaConfig {
+ 
+     public static boolean disableOutOfOrderChat;
+     public static boolean offlineWarning;
++    public static boolean allowAnyUsername;
+     private static void miscSettings() {
+         disableOutOfOrderChat = getBoolean("disable-out-of-order-chat", false);
+         offlineWarning = getBoolean("offline-warning", true);
++        allowAnyUsername = getBoolean("allow-any-username", false);
+     }
+ }
+diff --git a/src/main/java/net/minecraft/server/network/ServerLoginPacketListenerImpl.java b/src/main/java/net/minecraft/server/network/ServerLoginPacketListenerImpl.java
+index fbd9807e3a9ad555999fa99e06211ecaf455a091..23c6bbe5a36db5f82cd050dcf9121088836ddfe6 100644
+--- a/src/main/java/net/minecraft/server/network/ServerLoginPacketListenerImpl.java
++++ b/src/main/java/net/minecraft/server/network/ServerLoginPacketListenerImpl.java
+@@ -269,7 +269,7 @@ public class ServerLoginPacketListenerImpl implements TickablePacketListener, Se
+     @Override
+     public void handleHello(ServerboundHelloPacket packet) {
+         Validate.validState(this.state == ServerLoginPacketListenerImpl.State.HELLO, "Unexpected hello packet", new Object[0]);
+-        Validate.validState(ServerLoginPacketListenerImpl.isValidUsername(packet.name()), "Invalid characters in username", new Object[0]);
++        if (!moe.irochi.rubia.RubiaConfig.allowAnyUsername) Validate.validState(ServerLoginPacketListenerImpl.isValidUsername(packet.name()), "Invalid characters in username", new Object[0]);; // Rubia
+         // Paper start - validate usernames
+         if (io.papermc.paper.configuration.GlobalConfiguration.get().proxies.isProxyOnlineMode() && io.papermc.paper.configuration.GlobalConfiguration.get().unsupportedSettings.performUsernameValidation) {
+             if (!this.iKnowThisMayNotBeTheBestIdeaButPleaseDisableUsernameValidation && !validateUsername(packet.name())) {
