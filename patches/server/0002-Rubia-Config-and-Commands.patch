@@ -5,10 +5,10 @@ Subject: [PATCH] Rubia Config and Commands
 
 
 diff --git a/build.gradle.kts b/build.gradle.kts
-index df9c6a92d9ec27f82bd3088afb70448d7937ef90..4143a645090360ed195a968b04675b2c6abd6a04 100644
+index fb5af09302d4710f70d61b52604661a2221f004b..ff405e88fd662be4c020fa937592d6f230a2881b 100644
 --- a/build.gradle.kts
 +++ b/build.gradle.kts
-@@ -48,6 +48,13 @@ dependencies {
+@@ -46,6 +46,13 @@ dependencies {
      runtimeOnly("org.apache.maven.resolver:maven-resolver-connector-basic:1.7.3")
      runtimeOnly("org.apache.maven.resolver:maven-resolver-transport-http:1.7.3")
  

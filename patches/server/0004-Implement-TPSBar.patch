@@ -308,7 +308,7 @@ index 2ed35d61fead512d1ab2888e16ac7cc011dde047..5382b329b64b0061106e9177290fa08a
          }
      }
 diff --git a/src/main/java/net/minecraft/server/level/ServerPlayer.java b/src/main/java/net/minecraft/server/level/ServerPlayer.java
-index c00c20626bf9695c88d35b2df015ca1853ecf3b5..5ea605d4a677b55e6a81b15c96d9baeae4beff9e 100644
+index 3b122f521c166253f20d233c0fcebdede6660be5..13635198d3705ae31694fcada8e0b22cf299d42e 100644
 --- a/src/main/java/net/minecraft/server/level/ServerPlayer.java
 +++ b/src/main/java/net/minecraft/server/level/ServerPlayer.java
 @@ -261,6 +261,7 @@ public class ServerPlayer extends Player {
@@ -335,7 +335,7 @@ index c00c20626bf9695c88d35b2df015ca1853ecf3b5..5ea605d4a677b55e6a81b15c96d9baea
      }
  
      // CraftBukkit start - World fallback code, either respawn location or global spawn
-@@ -2487,4 +2490,14 @@ public class ServerPlayer extends Player {
+@@ -2503,4 +2506,14 @@ public class ServerPlayer extends Player {
          return (CraftPlayer) super.getBukkitEntity();
      }
      // CraftBukkit end
@@ -351,7 +351,7 @@ index c00c20626bf9695c88d35b2df015ca1853ecf3b5..5ea605d4a677b55e6a81b15c96d9baea
 +    // Rubia end
  }
 diff --git a/src/main/java/net/minecraft/server/players/PlayerList.java b/src/main/java/net/minecraft/server/players/PlayerList.java
-index fc755298ebe76d71bd55d547fb82604df1da652a..720bc43e7e4f2d4cf97ce0651cc92b6bb8e55b21 100644
+index 3be9352ae9b0b84acf07064b45562ceffd30391b..b4cb8ae61c4aaa58cebf1e0bdf0ee5e888e01c77 100644
 --- a/src/main/java/net/minecraft/server/players/PlayerList.java
 +++ b/src/main/java/net/minecraft/server/players/PlayerList.java
 @@ -503,6 +503,7 @@ public abstract class PlayerList {
