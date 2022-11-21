@@ -19,10 +19,10 @@ index 63ec2ebb71aa0e0dbb64bbce7cd3c9494e9ce2e7..64e882b718bb7d831f77d7c1b2842edb
          public String url = "https://timings.aikar.co/";
          public boolean serverNamePrivacy = false;
 diff --git a/src/main/java/io/papermc/paper/configuration/WorldConfiguration.java b/src/main/java/io/papermc/paper/configuration/WorldConfiguration.java
-index a1bd848bbf924267e74e61dabdb840628712b1ad..b326856e659a24fa4cf8f5efb0afa6e78c6778ec 100644
+index 7e995bb83a06e302fd70a8e6f079e3ac55c60473..e61770784e0401980006175fb27b1162f42b15f0 100644
 --- a/src/main/java/io/papermc/paper/configuration/WorldConfiguration.java
 +++ b/src/main/java/io/papermc/paper/configuration/WorldConfiguration.java
-@@ -80,16 +80,18 @@ public class WorldConfiguration extends ConfigurationPart {
+@@ -81,16 +81,18 @@ public class WorldConfiguration extends ConfigurationPart {
          public AntiXray antiXray;
  
          public class AntiXray extends ConfigurationPart {
@@ -47,7 +47,7 @@ index a1bd848bbf924267e74e61dabdb840628712b1ad..b326856e659a24fa4cf8f5efb0afa6e7
          }
      }
  
-@@ -113,8 +115,8 @@ public class WorldConfiguration extends ConfigurationPart {
+@@ -114,8 +116,8 @@ public class WorldConfiguration extends ConfigurationPart {
          public ArmorStands armorStands;
  
          public class ArmorStands extends ConfigurationPart {
@@ -58,7 +58,7 @@ index a1bd848bbf924267e74e61dabdb840628712b1ad..b326856e659a24fa4cf8f5efb0afa6e7
          }
  
          public Spawning spawning;
-@@ -129,7 +131,7 @@ public class WorldConfiguration extends ConfigurationPart {
+@@ -130,7 +132,7 @@ public class WorldConfiguration extends ConfigurationPart {
              @MergeMap
              public Reference2IntMap<MobCategory> spawnLimits = Util.make(new Reference2IntOpenHashMap<>(NaturalSpawner.SPAWNING_CATEGORIES.length), map -> Arrays.stream(NaturalSpawner.SPAWNING_CATEGORIES).forEach(mobCategory -> map.put(mobCategory, -1)));
              @MergeMap
@@ -67,7 +67,7 @@ index a1bd848bbf924267e74e61dabdb840628712b1ad..b326856e659a24fa4cf8f5efb0afa6e7
  
              @ConfigSerializable
              public record DespawnRange(@Required int soft, @Required int hard) {
-@@ -189,8 +191,37 @@ public class WorldConfiguration extends ConfigurationPart {
+@@ -190,8 +192,37 @@ public class WorldConfiguration extends ConfigurationPart {
              public AltItemDespawnRate altItemDespawnRate;
  
              public class AltItemDespawnRate extends ConfigurationPart {
@@ -107,7 +107,7 @@ index a1bd848bbf924267e74e61dabdb840628712b1ad..b326856e659a24fa4cf8f5efb0afa6e7
              }
          }
  
-@@ -309,7 +340,7 @@ public class WorldConfiguration extends ConfigurationPart {
+@@ -310,7 +341,7 @@ public class WorldConfiguration extends ConfigurationPart {
      public class Environment extends ConfigurationPart {
          public boolean disableThunder = false;
          public boolean disableIceAndSnow = false;
@@ -116,7 +116,7 @@ index a1bd848bbf924267e74e61dabdb840628712b1ad..b326856e659a24fa4cf8f5efb0afa6e7
          public boolean disableExplosionKnockback = false;
          public boolean generateFlatBedrock = false;
          public FrostedIce frostedIce;
-@@ -326,11 +357,11 @@ public class WorldConfiguration extends ConfigurationPart {
+@@ -327,11 +358,11 @@ public class WorldConfiguration extends ConfigurationPart {
  
          public TreasureMaps treasureMaps;
          public class TreasureMaps extends ConfigurationPart {
@@ -131,7 +131,7 @@ index a1bd848bbf924267e74e61dabdb840628712b1ad..b326856e659a24fa4cf8f5efb0afa6e7
          }
  
          public int fireTickDelay = 30;
-@@ -381,7 +412,7 @@ public class WorldConfiguration extends ConfigurationPart {
+@@ -382,7 +413,7 @@ public class WorldConfiguration extends ConfigurationPart {
      public class Hopper extends ConfigurationPart {
          public boolean cooldownWhenFull = true;
          public boolean disableMoveEvent = false;
@@ -140,7 +140,7 @@ index a1bd848bbf924267e74e61dabdb840628712b1ad..b326856e659a24fa4cf8f5efb0afa6e7
      }
  
      public Collisions collisions;
-@@ -389,9 +420,9 @@ public class WorldConfiguration extends ConfigurationPart {
+@@ -390,9 +421,9 @@ public class WorldConfiguration extends ConfigurationPart {
      public class Collisions extends ConfigurationPart {
          public boolean onlyPlayersCollide = false;
          public boolean allowVehicleCollisions = true;
@@ -152,7 +152,7 @@ index a1bd848bbf924267e74e61dabdb840628712b1ad..b326856e659a24fa4cf8f5efb0afa6e7
          public boolean allowPlayerCrammingDamage = false;
      }
  
-@@ -399,18 +430,31 @@ public class WorldConfiguration extends ConfigurationPart {
+@@ -400,18 +431,31 @@ public class WorldConfiguration extends ConfigurationPart {
  
      public class Chunks extends ConfigurationPart {
          public AutosavePeriod autoSaveInterval = AutosavePeriod.def();
@@ -192,7 +192,7 @@ index a1bd848bbf924267e74e61dabdb840628712b1ad..b326856e659a24fa4cf8f5efb0afa6e7
          });
      }
  
-@@ -424,11 +468,22 @@ public class WorldConfiguration extends ConfigurationPart {
+@@ -425,11 +469,22 @@ public class WorldConfiguration extends ConfigurationPart {
      public TickRates tickRates;
  
      public class TickRates extends ConfigurationPart {
@@ -219,7 +219,7 @@ index a1bd848bbf924267e74e61dabdb840628712b1ad..b326856e659a24fa4cf8f5efb0afa6e7
      }
  
      @Setting(FeatureSeedsGeneration.FEATURE_SEEDS_KEY)
-@@ -450,9 +505,9 @@ public class WorldConfiguration extends ConfigurationPart {
+@@ -451,9 +506,9 @@ public class WorldConfiguration extends ConfigurationPart {
  
      public class Misc extends ConfigurationPart {
          public int lightQueueSize = 20;
