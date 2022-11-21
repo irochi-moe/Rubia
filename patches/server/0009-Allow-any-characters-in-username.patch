@@ -20,7 +20,7 @@ index 0948896013e9ec6ea85e3f9398dae16f133e4476..fe639caab4f11daa6d1ebb1cf4ba782e
      }
  }
 diff --git a/src/main/java/net/minecraft/server/network/ServerLoginPacketListenerImpl.java b/src/main/java/net/minecraft/server/network/ServerLoginPacketListenerImpl.java
-index fbd9807e3a9ad555999fa99e06211ecaf455a091..23c6bbe5a36db5f82cd050dcf9121088836ddfe6 100644
+index fbd9807e3a9ad555999fa99e06211ecaf455a091..84c5349beb7f3352fda0f4d7e7399701bfcc9671 100644
 --- a/src/main/java/net/minecraft/server/network/ServerLoginPacketListenerImpl.java
 +++ b/src/main/java/net/minecraft/server/network/ServerLoginPacketListenerImpl.java
 @@ -269,7 +269,7 @@ public class ServerLoginPacketListenerImpl implements TickablePacketListener, Se
@@ -28,7 +28,7 @@ index fbd9807e3a9ad555999fa99e06211ecaf455a091..23c6bbe5a36db5f82cd050dcf9121088
      public void handleHello(ServerboundHelloPacket packet) {
          Validate.validState(this.state == ServerLoginPacketListenerImpl.State.HELLO, "Unexpected hello packet", new Object[0]);
 -        Validate.validState(ServerLoginPacketListenerImpl.isValidUsername(packet.name()), "Invalid characters in username", new Object[0]);
-+        if (!moe.irochi.rubia.RubiaConfig.allowAnyUsername) Validate.validState(ServerLoginPacketListenerImpl.isValidUsername(packet.name()), "Invalid characters in username", new Object[0]);; // Rubia
++        if (!moe.irochi.rubia.RubiaConfig.allowAnyUsername) Validate.validState(ServerLoginPacketListenerImpl.isValidUsername(packet.name()), "Invalid characters in username", new Object[0]); // Rubia
          // Paper start - validate usernames
          if (io.papermc.paper.configuration.GlobalConfiguration.get().proxies.isProxyOnlineMode() && io.papermc.paper.configuration.GlobalConfiguration.get().unsupportedSettings.performUsernameValidation) {
              if (!this.iKnowThisMayNotBeTheBestIdeaButPleaseDisableUsernameValidation && !validateUsername(packet.name())) {
