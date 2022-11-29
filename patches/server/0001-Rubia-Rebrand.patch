@@ -308,7 +308,7 @@ index 8db3bcc63aeb23e5b50864ebea675acc75d184ff..022cb05743682b9f042643fbf1b320e8
  
      private static final int DEFAULT_SIZE_THRESHOLD = 1024 * 8;
 diff --git a/src/main/java/org/bukkit/craftbukkit/CraftServer.java b/src/main/java/org/bukkit/craftbukkit/CraftServer.java
-index 4212568bf8de6988c71f43d3e2152fa0fe51d0d7..9f325d9bd03b4ac2ce6a37641f1bd2959fe4c9bc 100644
+index 07eac5439164a7345476c55277538a152359630a..5162dd9e6dae7d51b3876b63e28501a27063f01d 100644
 --- a/src/main/java/org/bukkit/craftbukkit/CraftServer.java
 +++ b/src/main/java/org/bukkit/craftbukkit/CraftServer.java
 @@ -248,7 +248,7 @@ import javax.annotation.Nullable; // Paper
@@ -347,10 +347,10 @@ index cdefb2025eedea7e204d70d568adaf1c1ec4c03c..faa3fc872b8b894b2b2f25474ab5ff89
                  // (async tasks must live with race-conditions if they attempt to cancel between these few lines of code)
              }
 diff --git a/src/main/java/org/bukkit/craftbukkit/util/CraftMagicNumbers.java b/src/main/java/org/bukkit/craftbukkit/util/CraftMagicNumbers.java
-index 1628913b1e9b91e68dcd942a38da4aed95b12d4a..3974a85b694471483800ba6a13258826be8a37f2 100644
+index 103ab25119bfcdd21eac7e1deeac025108e3c138..0a0a57077236091d5a1c45afb70b237f9d426be9 100644
 --- a/src/main/java/org/bukkit/craftbukkit/util/CraftMagicNumbers.java
 +++ b/src/main/java/org/bukkit/craftbukkit/util/CraftMagicNumbers.java
-@@ -430,7 +430,7 @@ public final class CraftMagicNumbers implements UnsafeValues {
+@@ -435,7 +435,7 @@ public final class CraftMagicNumbers implements UnsafeValues {
  
      @Override
      public com.destroystokyo.paper.util.VersionFetcher getVersionFetcher() {
