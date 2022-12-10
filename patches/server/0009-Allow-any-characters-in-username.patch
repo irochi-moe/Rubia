@@ -20,10 +20,10 @@ index 0948896013e9ec6ea85e3f9398dae16f133e4476..fe639caab4f11daa6d1ebb1cf4ba782e
      }
  }
 diff --git a/src/main/java/net/minecraft/server/network/ServerLoginPacketListenerImpl.java b/src/main/java/net/minecraft/server/network/ServerLoginPacketListenerImpl.java
-index fbd9807e3a9ad555999fa99e06211ecaf455a091..84c5349beb7f3352fda0f4d7e7399701bfcc9671 100644
+index f3b340fc6be9878d677a76673450aac3e0b73d4b..588ccd7f2464aae9f057846c98ab5fabd455fd7a 100644
 --- a/src/main/java/net/minecraft/server/network/ServerLoginPacketListenerImpl.java
 +++ b/src/main/java/net/minecraft/server/network/ServerLoginPacketListenerImpl.java
-@@ -269,7 +269,7 @@ public class ServerLoginPacketListenerImpl implements TickablePacketListener, Se
+@@ -237,7 +237,7 @@ public class ServerLoginPacketListenerImpl implements ServerLoginPacketListener,
      @Override
      public void handleHello(ServerboundHelloPacket packet) {
          Validate.validState(this.state == ServerLoginPacketListenerImpl.State.HELLO, "Unexpected hello packet", new Object[0]);

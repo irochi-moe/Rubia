@@ -5,10 +5,10 @@ Subject: [PATCH] Better offline warning message when using Velocity
 
 
 diff --git a/src/main/java/net/minecraft/server/dedicated/DedicatedServer.java b/src/main/java/net/minecraft/server/dedicated/DedicatedServer.java
-index c6814c7cdc24d074518cb312ecc9cad773637047..19acf14b867c258fafdd3d725774b84e45ccbf56 100644
+index 1065d0b31406fc45cc54e44902bd6f170462e5ea..0f11355863e61a81b5e5e257657b62c12c4e8a48 100644
 --- a/src/main/java/net/minecraft/server/dedicated/DedicatedServer.java
 +++ b/src/main/java/net/minecraft/server/dedicated/DedicatedServer.java
-@@ -289,6 +289,8 @@ public class DedicatedServer extends MinecraftServer implements ServerInterface
+@@ -284,6 +284,8 @@ public class DedicatedServer extends MinecraftServer implements ServerInterface
              if (org.spigotmc.SpigotConfig.bungee) {
                  DedicatedServer.LOGGER.warn("Whilst this makes it possible to use BungeeCord, unless access to your server is properly restricted, it also opens up the ability for hackers to connect with any username they choose.");
                  DedicatedServer.LOGGER.warn("Please see http://www.spigotmc.org/wiki/firewall-guide/ for further information.");

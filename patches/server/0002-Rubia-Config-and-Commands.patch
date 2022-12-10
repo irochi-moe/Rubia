@@ -5,10 +5,10 @@ Subject: [PATCH] Rubia Config and Commands
 
 
 diff --git a/build.gradle.kts b/build.gradle.kts
-index fb5af09302d4710f70d61b52604661a2221f004b..ff405e88fd662be4c020fa937592d6f230a2881b 100644
+index f3f78a7cbf44039cb99fd419631bd030f85fed8c..5ba251970e5fab8e663271df6af38a9c8e3dbb49 100644
 --- a/build.gradle.kts
 +++ b/build.gradle.kts
-@@ -46,6 +46,13 @@ dependencies {
+@@ -45,6 +45,13 @@ dependencies {
      runtimeOnly("org.apache.maven.resolver:maven-resolver-connector-basic:1.7.3")
      runtimeOnly("org.apache.maven.resolver:maven-resolver-transport-http:1.7.3")
  
@@ -271,10 +271,10 @@ index 0000000000000000000000000000000000000000..6fca938e7fb31c82f90c48ebb4538576
 +
 +}
 diff --git a/src/main/java/net/minecraft/server/dedicated/DedicatedServer.java b/src/main/java/net/minecraft/server/dedicated/DedicatedServer.java
-index ff3eced0e20c39b825586897ee2fed01dd471d88..2ed35d61fead512d1ab2888e16ac7cc011dde047 100644
+index 51b3db0b6c2cede95b584268e035c0fb36d38094..461d1fa33ddac548ed119a3d3019e454f2ce917c 100644
 --- a/src/main/java/net/minecraft/server/dedicated/DedicatedServer.java
 +++ b/src/main/java/net/minecraft/server/dedicated/DedicatedServer.java
-@@ -227,6 +227,9 @@ public class DedicatedServer extends MinecraftServer implements ServerInterface
+@@ -222,6 +222,9 @@ public class DedicatedServer extends MinecraftServer implements ServerInterface
          io.papermc.paper.brigadier.PaperBrigadierProviderImpl.INSTANCE.getClass(); // init PaperBrigadierProvider
          // Paper end
  

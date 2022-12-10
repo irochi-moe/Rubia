@@ -19,10 +19,10 @@ index 2433255f45ca520cd5a6e6f2be9ecaef94b9f186..0948896013e9ec6ea85e3f9398dae16f
      }
  }
 diff --git a/src/main/java/net/minecraft/server/dedicated/DedicatedServer.java b/src/main/java/net/minecraft/server/dedicated/DedicatedServer.java
-index b5b9db87a73ab2b94ea9e11a65782a86623c8115..fdcac176bb1ad78e7de60f38ab15fcdfd7b3aa96 100644
+index 0f11355863e61a81b5e5e257657b62c12c4e8a48..c3649d116f77c0d0e68b3e80693bc93da781b469 100644
 --- a/src/main/java/net/minecraft/server/dedicated/DedicatedServer.java
 +++ b/src/main/java/net/minecraft/server/dedicated/DedicatedServer.java
-@@ -283,19 +283,23 @@ public class DedicatedServer extends MinecraftServer implements ServerInterface
+@@ -278,19 +278,23 @@ public class DedicatedServer extends MinecraftServer implements ServerInterface
          // CraftBukkit end
  
          if (!this.usesAuthentication()) {

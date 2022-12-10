@@ -272,10 +272,10 @@ index 0000000000000000000000000000000000000000..b318f0bafee2dc1d64ae0a10e50d33fa
 +
 +}
 diff --git a/src/main/java/net/minecraft/commands/Commands.java b/src/main/java/net/minecraft/commands/Commands.java
-index 7c96f7fc5997761426a0c62cad0cab5cc668f282..058ad465d0255c20fdcc32c7284907f91cb1ea1f 100644
+index 330f6c79417378da855326b4da665f9d240e748d..3d6f26312193a3c8bfd4f822c4885875ff9f4c6c 100644
 --- a/src/main/java/net/minecraft/commands/Commands.java
 +++ b/src/main/java/net/minecraft/commands/Commands.java
-@@ -207,6 +207,7 @@ public class Commands {
+@@ -215,6 +215,7 @@ public class Commands {
              SetPlayerIdleTimeoutCommand.register(this.dispatcher);
              StopCommand.register(this.dispatcher);
              WhitelistCommand.register(this.dispatcher);
@@ -284,22 +284,22 @@ index 7c96f7fc5997761426a0c62cad0cab5cc668f282..058ad465d0255c20fdcc32c7284907f9
  
          if (environment.includeIntegrated) {
 diff --git a/src/main/java/net/minecraft/server/MinecraftServer.java b/src/main/java/net/minecraft/server/MinecraftServer.java
-index 65f18018f3d0529b30c2478b31b0eb067e1b4e1c..d3eef30762e7d0c863da92ad429ae44bf2659a78 100644
+index f8ebd4ce330828a49cf8cc84818e6e1782b83a2d..2a103c9658b8870845eda0ac21a6c7bfe0e34386 100644
 --- a/src/main/java/net/minecraft/server/MinecraftServer.java
 +++ b/src/main/java/net/minecraft/server/MinecraftServer.java
-@@ -1019,6 +1019,7 @@ public abstract class MinecraftServer extends ReentrantBlockableEventLoop<TickTa
-         this.safeShutdown(flag, false);
+@@ -1020,6 +1020,7 @@ public abstract class MinecraftServer extends ReentrantBlockableEventLoop<TickTa
+         this.safeShutdown(waitForShutdown, false);
      }
-     public void safeShutdown(boolean flag, boolean isRestarting) {
+     public void safeShutdown(boolean waitForShutdown, boolean isRestarting) {
 +        moe.irochi.rubia.command.TPSBarCommand.TPSBarTask.stopAll(); // Rubia
          this.isRestarting = isRestarting;
          this.hasLoggedStop = true; // Paper
          if (isDebugging()) io.papermc.paper.util.TraceUtil.dumpTraceForThread("Server stopped"); // Paper
 diff --git a/src/main/java/net/minecraft/server/dedicated/DedicatedServer.java b/src/main/java/net/minecraft/server/dedicated/DedicatedServer.java
-index 2ed35d61fead512d1ab2888e16ac7cc011dde047..5382b329b64b0061106e9177290fa08aa2ebdaf1 100644
+index 461d1fa33ddac548ed119a3d3019e454f2ce917c..1065d0b31406fc45cc54e44902bd6f170462e5ea 100644
 --- a/src/main/java/net/minecraft/server/dedicated/DedicatedServer.java
 +++ b/src/main/java/net/minecraft/server/dedicated/DedicatedServer.java
-@@ -341,6 +341,7 @@ public class DedicatedServer extends MinecraftServer implements ServerInterface
+@@ -335,6 +335,7 @@ public class DedicatedServer extends MinecraftServer implements ServerInterface
                  DedicatedServer.LOGGER.info("JMX monitoring enabled");
              }
  
@@ -308,18 +308,18 @@ index 2ed35d61fead512d1ab2888e16ac7cc011dde047..5382b329b64b0061106e9177290fa08a
          }
      }
 diff --git a/src/main/java/net/minecraft/server/level/ServerPlayer.java b/src/main/java/net/minecraft/server/level/ServerPlayer.java
-index 9c9b4d7e0637348a94befce9377fdb69c1239694..d557f8d6cab0e774c7a35c5bef343ccafea6b2b7 100644
+index c0b0a7fdb75266a7064d54bda6441953184ecc64..d7824ed0f83de2112d2a222f4dd54cd76d95793e 100644
 --- a/src/main/java/net/minecraft/server/level/ServerPlayer.java
 +++ b/src/main/java/net/minecraft/server/level/ServerPlayer.java
-@@ -261,6 +261,7 @@ public class ServerPlayer extends Player {
-     public Integer clientViewDistance;
-     // CraftBukkit end
+@@ -270,6 +270,7 @@ public class ServerPlayer extends Player {
+     public final com.destroystokyo.paper.util.misc.PooledLinkedHashSets.PooledObjectLinkedOpenHashSet<ServerPlayer> cachedSingleHashSet; // Paper
      public PlayerNaturallySpawnCreaturesEvent playerNaturallySpawnedEvent; // Paper
+     public org.bukkit.event.player.PlayerQuitEvent.QuitReason quitReason = null; // Paper - there are a lot of changes to do if we change all methods leading to the event
 +    private boolean tpsBar = false; // Rubia
  
-     public boolean isRealPlayer; // Paper
-     public double lastEntitySpawnRadiusSquared; // Paper - optimise isOutsideRange, this field is in blocks
-@@ -493,6 +494,7 @@ public class ServerPlayer extends Player {
+     public ServerPlayer(MinecraftServer server, ServerLevel world, GameProfile profile) {
+         super(world, world.getSharedSpawnPos(), world.getSharedSpawnAngle(), profile);
+@@ -508,6 +509,7 @@ public class ServerPlayer extends Player {
              }
          }
  
@@ -327,7 +327,7 @@ index 9c9b4d7e0637348a94befce9377fdb69c1239694..d557f8d6cab0e774c7a35c5bef343cca
      }
  
      @Override
-@@ -553,6 +555,7 @@ public class ServerPlayer extends Player {
+@@ -574,6 +576,7 @@ public class ServerPlayer extends Player {
          }
          this.getBukkitEntity().setExtraData(nbt); // CraftBukkit
  
@@ -335,7 +335,7 @@ index 9c9b4d7e0637348a94befce9377fdb69c1239694..d557f8d6cab0e774c7a35c5bef343cca
      }
  
      // CraftBukkit start - World fallback code, either respawn location or global spawn
-@@ -2510,4 +2513,14 @@ public class ServerPlayer extends Player {
+@@ -2550,4 +2553,14 @@ public class ServerPlayer extends Player {
          return (CraftPlayer) super.getBukkitEntity();
      }
      // CraftBukkit end
@@ -351,10 +351,10 @@ index 9c9b4d7e0637348a94befce9377fdb69c1239694..d557f8d6cab0e774c7a35c5bef343cca
 +    // Rubia end
  }
 diff --git a/src/main/java/net/minecraft/server/players/PlayerList.java b/src/main/java/net/minecraft/server/players/PlayerList.java
-index 3be9352ae9b0b84acf07064b45562ceffd30391b..b4cb8ae61c4aaa58cebf1e0bdf0ee5e888e01c77 100644
+index b348d33726b2b14ea2d12ce3430df2c0b94295f4..f3f40cc08930725a4562fccf7cd37d434b421359 100644
 --- a/src/main/java/net/minecraft/server/players/PlayerList.java
 +++ b/src/main/java/net/minecraft/server/players/PlayerList.java
-@@ -503,6 +503,7 @@ public abstract class PlayerList {
+@@ -511,6 +511,7 @@ public abstract class PlayerList {
              scoreboard.addPlayerToTeam(player.getScoreboardName(), collideRuleTeam);
          }
          // Paper end
@@ -362,7 +362,7 @@ index 3be9352ae9b0b84acf07064b45562ceffd30391b..b4cb8ae61c4aaa58cebf1e0bdf0ee5e8
          // CraftBukkit - Moved from above, added world
          PlayerList.LOGGER.info("{}[{}] logged in with entity id {} at ([{}]{}, {}, {})", player.getName().getString(), s1, player.getId(), worldserver1.serverLevelData.getLevelName(), player.getX(), player.getY(), player.getZ());
      }
-@@ -613,6 +614,8 @@ public abstract class PlayerList {
+@@ -621,6 +622,8 @@ public abstract class PlayerList {
      }
      public net.kyori.adventure.text.Component remove(ServerPlayer entityplayer, net.kyori.adventure.text.Component leaveMessage) {
          // Paper end
@@ -373,7 +373,7 @@ index 3be9352ae9b0b84acf07064b45562ceffd30391b..b4cb8ae61c4aaa58cebf1e0bdf0ee5e8
          entityplayer.awardStat(Stats.LEAVE_GAME);
 diff --git a/src/test/java/io/papermc/paper/permissions/MinecraftCommandPermissionsTest.java b/src/test/java/io/papermc/paper/permissions/MinecraftCommandPermissionsTest.java
 deleted file mode 100644
-index da2eb57ea64403657744ea00eff40243ef51df58..0000000000000000000000000000000000000000
+index 8665e2740aedcc2895b0e2c44ebaba53d2a40568..0000000000000000000000000000000000000000
 --- a/src/test/java/io/papermc/paper/permissions/MinecraftCommandPermissionsTest.java
 +++ /dev/null
 @@ -1,86 +0,0 @@
@@ -384,8 +384,8 @@ index da2eb57ea64403657744ea00eff40243ef51df58..00000000000000000000000000000000
 -import net.minecraft.commands.CommandBuildContext;
 -import net.minecraft.commands.CommandSourceStack;
 -import net.minecraft.commands.Commands;
--import net.minecraft.core.RegistryAccess;
 -import net.minecraft.server.Bootstrap;
+-import net.minecraft.world.flag.FeatureFlags;
 -import org.bukkit.Bukkit;
 -import org.bukkit.craftbukkit.command.VanillaCommandWrapper;
 -import org.bukkit.craftbukkit.util.permissions.CraftDefaultPermissions;
@@ -418,7 +418,7 @@ index da2eb57ea64403657744ea00eff40243ef51df58..00000000000000000000000000000000
 -        CraftDefaultPermissions.registerCorePermissions();
 -        Set<String> perms = collectMinecraftCommandPerms();
 -
--        Commands commands = new Commands(Commands.CommandSelection.DEDICATED, new CommandBuildContext(RegistryAccess.BUILTIN.get()));
+-        Commands commands = new Commands(Commands.CommandSelection.DEDICATED, CommandBuildContext.configurable(AbstractTestingBase.REGISTRY_CUSTOM, FeatureFlags.VANILLA_SET));
 -        RootCommandNode<CommandSourceStack> root = commands.getDispatcher().getRoot();
 -        Set<String> missing = new LinkedHashSet<>();
 -        Set<String> foundPerms = new HashSet<>();

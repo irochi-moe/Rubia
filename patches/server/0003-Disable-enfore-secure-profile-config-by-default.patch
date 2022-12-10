@@ -5,15 +5,15 @@ Subject: [PATCH] Disable enfore secure profile config by default
 
 
 diff --git a/src/main/java/net/minecraft/server/dedicated/DedicatedServerProperties.java b/src/main/java/net/minecraft/server/dedicated/DedicatedServerProperties.java
-index a32cfa75a9bea896f558bab646d0868391b069a9..942ba3b9d7d5bf01dd82b03c557d3c8f427ac9c1 100644
+index c7e4330c93baff1f3027d7c75cf857b673d38970..0baf1a2a40579059dbf6ddcec3292aaa9c3f299e 100644
 --- a/src/main/java/net/minecraft/server/dedicated/DedicatedServerProperties.java
 +++ b/src/main/java/net/minecraft/server/dedicated/DedicatedServerProperties.java
-@@ -147,7 +147,7 @@ public class DedicatedServerProperties extends Settings<DedicatedServerPropertie
-         this.previewsChat = this.get("previews-chat", false);
+@@ -154,7 +154,7 @@ public class DedicatedServerProperties extends Settings<DedicatedServerPropertie
+         this.textFilteringConfig = this.get("text-filtering-config", "");
          this.playerIdleTimeout = this.getMutable("player-idle-timeout", 0);
          this.whiteList = this.getMutable("white-list", false);
 -        this.enforceSecureProfile = this.get("enforce-secure-profile", true);
 +        this.enforceSecureProfile = this.get("enforce-secure-profile", false); // Rubia
-         this.worldGenProperties = new DedicatedServerProperties.WorldGenProperties(this.get("level-seed", ""), (JsonObject) this.get("generator-settings", (s) -> {
-             return GsonHelper.parse(!s.isEmpty() ? s : "{}");
-         }, new JsonObject()), this.get("generate-structures", true), (String) this.get("level-type", (s) -> {
+         String s = this.get("level-seed", "");
+         boolean flag = this.get("generate-structures", true);
+         long i = WorldOptions.parseSeed(s).orElse(WorldOptions.randomSeed());

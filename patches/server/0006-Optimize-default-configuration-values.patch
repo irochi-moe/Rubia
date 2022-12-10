@@ -19,18 +19,17 @@ index 63ec2ebb71aa0e0dbb64bbce7cd3c9494e9ce2e7..64e882b718bb7d831f77d7c1b2842edb
          public String url = "https://timings.aikar.co/";
          public boolean serverNamePrivacy = false;
 diff --git a/src/main/java/io/papermc/paper/configuration/WorldConfiguration.java b/src/main/java/io/papermc/paper/configuration/WorldConfiguration.java
-index 5982dda61e07f1661b0a68d0ba1fcc1122e8d428..20cef1d7ef5bd3cd4d08287947a1166b618953a7 100644
+index 7e1add0f18da3ac2d93b084979d419cf45d2bca3..a62da0bfd60a87db755ee6128ba6e62431490191 100644
 --- a/src/main/java/io/papermc/paper/configuration/WorldConfiguration.java
 +++ b/src/main/java/io/papermc/paper/configuration/WorldConfiguration.java
-@@ -81,16 +81,18 @@ public class WorldConfiguration extends ConfigurationPart {
+@@ -81,16 +81,16 @@ public class WorldConfiguration extends ConfigurationPart {
          public AntiXray antiXray;
  
          public class AntiXray extends ConfigurationPart {
 -            public boolean enabled = false;
 -            public EngineMode engineMode = EngineMode.HIDE;
-+            // Rubia start
-+            public boolean enabled = true;
-+            public EngineMode engineMode = EngineMode.OBFUSCATE;
++            public boolean enabled = true; // Rubia
++            public EngineMode engineMode = EngineMode.OBFUSCATE; // Rubia
              public int maxBlockHeight = 64;
              public int updateRadius = 2;
              public boolean lavaObscures = false;
@@ -40,14 +39,13 @@ index 5982dda61e07f1661b0a68d0ba1fcc1122e8d428..20cef1d7ef5bd3cd4d08287947a1166b
 -                "redstone_ore", "deepslate_redstone_ore", "clay", "emerald_ore", "deepslate_emerald_ore", "ender_chest"); // TODO update type to List<Block>
 -            public List<String> replacementBlocks = List.of("stone", "oak_planks", "deepslate"); // TODO update type to List<Block>
 +            public List<String> hiddenBlocks = List.of("air", "copper_ore", "deepslate_copper_ore", "raw_copper_block", "diamond_ore", "deepslate_diamond_ore",
-+                "gold_ore", "deepslate_gold_ore", "iron_ore", "deepslate_iron_ore", "raw_iron_block", "lapis_ore", "deepslate_lapis_ore", "redstone_ore", "deepslate_redstone_ore"); // TODO update type to List<Block>
++                "gold_ore", "deepslate_gold_ore", "iron_ore", "deepslate_iron_ore", "raw_iron_block", "lapis_ore", "deepslate_lapis_ore", "redstone_ore", "deepslate_redstone_ore"); // TODO update type to List<Block> // Rubia
 +            public List<String> replacementBlocks = List.of("chest", "amethyst_block", "andesite", "budding_amethyst", "calcite", "coal_ore", "deepslate_coal_ore", "deepslate",
-+                "diorite", "dirt", "emerald_ore", "deepslate_emerald_ore", "granite", "gravel", "oak_planks", "smooth_basalt", "stone", "tuff"); // TODO update type to List<Block>
-+            // Rubia end
++                "diorite", "dirt", "emerald_ore", "deepslate_emerald_ore", "granite", "gravel", "oak_planks", "smooth_basalt", "stone", "tuff"); // TODO update type to List<Block> // Rubia
          }
      }
  
-@@ -114,8 +116,8 @@ public class WorldConfiguration extends ConfigurationPart {
+@@ -114,8 +114,8 @@ public class WorldConfiguration extends ConfigurationPart {
          public ArmorStands armorStands;
  
          public class ArmorStands extends ConfigurationPart {
@@ -58,7 +56,7 @@ index 5982dda61e07f1661b0a68d0ba1fcc1122e8d428..20cef1d7ef5bd3cd4d08287947a1166b
          }
  
          public Spawning spawning;
-@@ -130,7 +132,7 @@ public class WorldConfiguration extends ConfigurationPart {
+@@ -130,7 +130,7 @@ public class WorldConfiguration extends ConfigurationPart {
              @MergeMap
              public Reference2IntMap<MobCategory> spawnLimits = Util.make(new Reference2IntOpenHashMap<>(NaturalSpawner.SPAWNING_CATEGORIES.length), map -> Arrays.stream(NaturalSpawner.SPAWNING_CATEGORIES).forEach(mobCategory -> map.put(mobCategory, -1)));
              @MergeMap
@@ -67,7 +65,7 @@ index 5982dda61e07f1661b0a68d0ba1fcc1122e8d428..20cef1d7ef5bd3cd4d08287947a1166b
  
              @ConfigSerializable
              public record DespawnRange(@Required int soft, @Required int hard) {
-@@ -190,8 +192,37 @@ public class WorldConfiguration extends ConfigurationPart {
+@@ -190,8 +190,37 @@ public class WorldConfiguration extends ConfigurationPart {
              public AltItemDespawnRate altItemDespawnRate;
  
              public class AltItemDespawnRate extends ConfigurationPart {
@@ -107,7 +105,7 @@ index 5982dda61e07f1661b0a68d0ba1fcc1122e8d428..20cef1d7ef5bd3cd4d08287947a1166b
              }
          }
  
-@@ -313,7 +344,7 @@ public class WorldConfiguration extends ConfigurationPart {
+@@ -313,7 +342,7 @@ public class WorldConfiguration extends ConfigurationPart {
      public class Environment extends ConfigurationPart {
          public boolean disableThunder = false;
          public boolean disableIceAndSnow = false;
@@ -116,7 +114,7 @@ index 5982dda61e07f1661b0a68d0ba1fcc1122e8d428..20cef1d7ef5bd3cd4d08287947a1166b
          public boolean disableExplosionKnockback = false;
          public boolean generateFlatBedrock = false;
          public FrostedIce frostedIce;
-@@ -330,11 +361,11 @@ public class WorldConfiguration extends ConfigurationPart {
+@@ -330,11 +359,11 @@ public class WorldConfiguration extends ConfigurationPart {
  
          public TreasureMaps treasureMaps;
          public class TreasureMaps extends ConfigurationPart {
@@ -131,7 +129,7 @@ index 5982dda61e07f1661b0a68d0ba1fcc1122e8d428..20cef1d7ef5bd3cd4d08287947a1166b
          }
  
          public int fireTickDelay = 30;
-@@ -385,7 +416,7 @@ public class WorldConfiguration extends ConfigurationPart {
+@@ -385,7 +414,7 @@ public class WorldConfiguration extends ConfigurationPart {
      public class Hopper extends ConfigurationPart {
          public boolean cooldownWhenFull = true;
          public boolean disableMoveEvent = false;
@@ -140,7 +138,7 @@ index 5982dda61e07f1661b0a68d0ba1fcc1122e8d428..20cef1d7ef5bd3cd4d08287947a1166b
      }
  
      public Collisions collisions;
-@@ -393,9 +424,9 @@ public class WorldConfiguration extends ConfigurationPart {
+@@ -393,9 +422,9 @@ public class WorldConfiguration extends ConfigurationPart {
      public class Collisions extends ConfigurationPart {
          public boolean onlyPlayersCollide = false;
          public boolean allowVehicleCollisions = true;
@@ -152,7 +150,7 @@ index 5982dda61e07f1661b0a68d0ba1fcc1122e8d428..20cef1d7ef5bd3cd4d08287947a1166b
          public boolean allowPlayerCrammingDamage = false;
      }
  
-@@ -403,18 +434,31 @@ public class WorldConfiguration extends ConfigurationPart {
+@@ -403,18 +432,31 @@ public class WorldConfiguration extends ConfigurationPart {
  
      public class Chunks extends ConfigurationPart {
          public AutosavePeriod autoSaveInterval = AutosavePeriod.def();
@@ -162,7 +160,7 @@ index 5982dda61e07f1661b0a68d0ba1fcc1122e8d428..20cef1d7ef5bd3cd4d08287947a1166b
 -        public boolean preventMovingIntoUnloadedChunks = false;
 +        public boolean preventMovingIntoUnloadedChunks = true; // Rubia
          public Duration delayChunkUnloadsBy = Duration.of("10s");
-         public Reference2IntMap<EntityType<?>> entityPerChunkSaveLimit = Util.make(new Reference2IntOpenHashMap<>(Registry.ENTITY_TYPE.size()), map -> {
+         public Reference2IntMap<EntityType<?>> entityPerChunkSaveLimit = Util.make(new Reference2IntOpenHashMap<>(BuiltInRegistries.ENTITY_TYPE.size()), map -> {
              map.defaultReturnValue(-1);
 -            map.put(EntityType.EXPERIENCE_ORB, -1);
 -            map.put(EntityType.SNOWBALL, -1);
@@ -192,7 +190,7 @@ index 5982dda61e07f1661b0a68d0ba1fcc1122e8d428..20cef1d7ef5bd3cd4d08287947a1166b
          });
      }
  
-@@ -428,11 +472,22 @@ public class WorldConfiguration extends ConfigurationPart {
+@@ -428,11 +470,22 @@ public class WorldConfiguration extends ConfigurationPart {
      public TickRates tickRates;
  
      public class TickRates extends ConfigurationPart {
@@ -219,7 +217,7 @@ index 5982dda61e07f1661b0a68d0ba1fcc1122e8d428..20cef1d7ef5bd3cd4d08287947a1166b
      }
  
      @Setting(FeatureSeedsGeneration.FEATURE_SEEDS_KEY)
-@@ -454,9 +509,9 @@ public class WorldConfiguration extends ConfigurationPart {
+@@ -454,9 +507,9 @@ public class WorldConfiguration extends ConfigurationPart {
  
      public class Misc extends ConfigurationPart {
          public int lightQueueSize = 20;
@@ -232,10 +230,10 @@ index 5982dda61e07f1661b0a68d0ba1fcc1122e8d428..20cef1d7ef5bd3cd4d08287947a1166b
          public float maxLeashDistance = 10f;
          public boolean disableSprintInterruptionOnAttack = false;
 diff --git a/src/main/java/io/papermc/paper/configuration/transformation/world/LegacyPaperWorldConfig.java b/src/main/java/io/papermc/paper/configuration/transformation/world/LegacyPaperWorldConfig.java
-index 6af307481a6752529d87869760945cb140d05bed..ed8eca03091c5d276755e38205460a75cc08c0c6 100644
+index edaa6ef28c1f9a2239439698708897008fea2f7e..97b0dba5ec426c6d9a5ac3a27d8e0dedb074bd38 100644
 --- a/src/main/java/io/papermc/paper/configuration/transformation/world/LegacyPaperWorldConfig.java
 +++ b/src/main/java/io/papermc/paper/configuration/transformation/world/LegacyPaperWorldConfig.java
-@@ -87,15 +87,15 @@ public final class LegacyPaperWorldConfig {
+@@ -88,15 +88,15 @@ public final class LegacyPaperWorldConfig {
                      .addAction(path("spawn-limits", "water-ambient"), TransformAction.rename("water_ambient"))
                      .build(),
                  ConfigurationTransformation.builder().addAction(path("despawn-ranges"), (path, value) -> {
@@ -256,10 +254,10 @@ index 6af307481a6752529d87869760945cb140d05bed..ed8eca03091c5d276755e38205460a75
                          }
                      }
 diff --git a/src/main/java/net/minecraft/server/dedicated/DedicatedServerProperties.java b/src/main/java/net/minecraft/server/dedicated/DedicatedServerProperties.java
-index 942ba3b9d7d5bf01dd82b03c557d3c8f427ac9c1..e4a220258b051a145872d766cf5dbcd1bd7f0412 100644
+index 0baf1a2a40579059dbf6ddcec3292aaa9c3f299e..8bc56dd722d71e615c386ad4e19d3bc4afca45aa 100644
 --- a/src/main/java/net/minecraft/server/dedicated/DedicatedServerProperties.java
 +++ b/src/main/java/net/minecraft/server/dedicated/DedicatedServerProperties.java
-@@ -121,15 +121,15 @@ public class DedicatedServerProperties extends Settings<DedicatedServerPropertie
+@@ -129,15 +129,15 @@ public class DedicatedServerProperties extends Settings<DedicatedServerPropertie
          this.spawnMonsters = this.get("spawn-monsters", true);
          this.useNativeTransport = this.get("use-native-transport", true);
          this.enableCommandBlock = this.get("enable-command-block", false);

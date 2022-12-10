@@ -5,7 +5,7 @@ Subject: [PATCH] Rubia Rebrand
 
 
 diff --git a/build.gradle.kts b/build.gradle.kts
-index b0e4f11e8af4b909a56bb5576d05ef0537fb25f7..fb5af09302d4710f70d61b52604661a2221f004b 100644
+index d5d49bb2b47c889e12d17dc87b8c439a60b3fe67..f3f78a7cbf44039cb99fd419631bd030f85fed8c 100644
 --- a/build.gradle.kts
 +++ b/build.gradle.kts
 @@ -7,8 +7,12 @@ plugins {
@@ -23,7 +23,7 @@ index b0e4f11e8af4b909a56bb5576d05ef0537fb25f7..fb5af09302d4710f70d61b52604661a2
      // Paper start
      implementation("org.jline:jline-terminal-jansi:3.21.0")
      implementation("net.minecrell:terminalconsoleappender:1.3.0")
-@@ -56,13 +60,13 @@ tasks.jar {
+@@ -55,13 +59,13 @@ tasks.jar {
      manifest {
          val git = Git(rootProject.layout.projectDirectory.path)
          val gitHash = git("rev-parse", "--short=7", "HEAD").getText().trim()
@@ -39,7 +39,7 @@ index b0e4f11e8af4b909a56bb5576d05ef0537fb25f7..fb5af09302d4710f70d61b52604661a2
              "Implementation-Vendor" to date, // Paper
              "Specification-Title" to "Bukkit",
              "Specification-Version" to project.version,
-@@ -134,7 +138,7 @@ fun TaskContainer.registerRunTask(
+@@ -133,7 +137,7 @@ fun TaskContainer.registerRunTask(
      name: String,
      block: JavaExec.() -> Unit
  ): TaskProvider<JavaExec> = register<JavaExec>(name) {
@@ -147,7 +147,7 @@ index c5d5648f4ca603ef2b1df723b58f9caf4dd3c722..160a2253701e9aa8f6796e4a61ed2a7d
                  .option(LineReader.Option.COMPLETE_IN_WORD, true);
 diff --git a/src/main/java/moe/irochi/rubia/RubiaVersionFetcher.java b/src/main/java/moe/irochi/rubia/RubiaVersionFetcher.java
 new file mode 100644
-index 0000000000000000000000000000000000000000..3aab7470e70c3fc1ea2a468367b76ec08627bafb
+index 0000000000000000000000000000000000000000..aa77c6c9c4693ad1528ac14eb5509c9b4f722abc
 --- /dev/null
 +++ b/src/main/java/moe/irochi/rubia/RubiaVersionFetcher.java
 @@ -0,0 +1,106 @@
@@ -184,7 +184,7 @@ index 0000000000000000000000000000000000000000..3aab7470e70c3fc1ea2a468367b76ec0
 +    private static final Logger LOGGER = Logger.getLogger("RubiaVersionFetcher");
 +    private static final HttpClient client = HttpClient.newHttpClient();
 +
-+    private static final String GITHUB_FORMAT = "https://api.github.com/repos/irochi-moe/Rubia/compare/ver/1.19.2...%s";
++    private static final String GITHUB_FORMAT = "https://api.github.com/repos/irochi-moe/Rubia/compare/ver/1.19.3...%s";
 +
 +    private static final HttpResponse.BodyHandler<JsonObject> JSON_OBJECT_BODY_HANDLER = responseInfo -> HttpResponse.BodySubscribers.mapping(
 +            HttpResponse.BodySubscribers.ofString(StandardCharsets.UTF_8),
@@ -273,10 +273,10 @@ index abe37c7c3c6f5ab73afd738ec78f06d7e4d2ed96..a728593563d8ae93d516d6f496a6cf63
          stringbuilder.append(CrashReport.getErrorComment());
          stringbuilder.append("\n\n");
 diff --git a/src/main/java/net/minecraft/server/MinecraftServer.java b/src/main/java/net/minecraft/server/MinecraftServer.java
-index 6dc6c3bccb4ba34268a87b0754c87eb1e0df4135..65f18018f3d0529b30c2478b31b0eb067e1b4e1c 100644
+index 710ca7d3a5659953f64bc6dccdd93b43300961cc..f8ebd4ce330828a49cf8cc84818e6e1782b83a2d 100644
 --- a/src/main/java/net/minecraft/server/MinecraftServer.java
 +++ b/src/main/java/net/minecraft/server/MinecraftServer.java
-@@ -921,7 +921,7 @@ public abstract class MinecraftServer extends ReentrantBlockableEventLoop<TickTa
+@@ -922,7 +922,7 @@ public abstract class MinecraftServer extends ReentrantBlockableEventLoop<TickTa
          shutdownThread = Thread.currentThread();
          org.spigotmc.WatchdogThread.doStop(); // Paper
          if (!isSameThread()) {
@@ -295,7 +295,7 @@ index 6dc6c3bccb4ba34268a87b0754c87eb1e0df4135..65f18018f3d0529b30c2478b31b0eb06
  
      public SystemReport fillSystemReport(SystemReport details) {
 diff --git a/src/main/java/net/minecraft/world/level/chunk/storage/RegionFileStorage.java b/src/main/java/net/minecraft/world/level/chunk/storage/RegionFileStorage.java
-index 8db3bcc63aeb23e5b50864ebea675acc75d184ff..022cb05743682b9f042643fbf1b320e81946e44c 100644
+index bd502ca721de0cab438d995efa00ad0554c0d2fe..916d5e97fa88cef477b0aa27ef119216e568ff96 100644
 --- a/src/main/java/net/minecraft/world/level/chunk/storage/RegionFileStorage.java
 +++ b/src/main/java/net/minecraft/world/level/chunk/storage/RegionFileStorage.java
 @@ -113,7 +113,7 @@ public class RegionFileStorage implements AutoCloseable {
@@ -308,10 +308,10 @@ index 8db3bcc63aeb23e5b50864ebea675acc75d184ff..022cb05743682b9f042643fbf1b320e8
  
      private static final int DEFAULT_SIZE_THRESHOLD = 1024 * 8;
 diff --git a/src/main/java/org/bukkit/craftbukkit/CraftServer.java b/src/main/java/org/bukkit/craftbukkit/CraftServer.java
-index 07eac5439164a7345476c55277538a152359630a..5162dd9e6dae7d51b3876b63e28501a27063f01d 100644
+index 47df6f4268a63118da8187f4102c876bd37d1680..17247aaacc29fc53c047169772a473ab87a5bd36 100644
 --- a/src/main/java/org/bukkit/craftbukkit/CraftServer.java
 +++ b/src/main/java/org/bukkit/craftbukkit/CraftServer.java
-@@ -248,7 +248,7 @@ import javax.annotation.Nullable; // Paper
+@@ -261,7 +261,7 @@ import javax.annotation.Nullable; // Paper
  import javax.annotation.Nonnull; // Paper
  
  public final class CraftServer implements Server {
@@ -321,7 +321,7 @@ index 07eac5439164a7345476c55277538a152359630a..5162dd9e6dae7d51b3876b63e28501a2
      private final String bukkitVersion = Versioning.getBukkitVersion();
      private final Logger logger = Logger.getLogger("Minecraft");
 diff --git a/src/main/java/org/bukkit/craftbukkit/Main.java b/src/main/java/org/bukkit/craftbukkit/Main.java
-index f30621be24c6c3a4f173436fce1ad1c13507c84f..077394b7d64c75f874227e9bf32075ca52064ff7 100644
+index e072a5475a64d110f25ebcc871aa7703c2fc1e70..662495adc6697b4c19125965d0ff8e6aa5ebf35b 100644
 --- a/src/main/java/org/bukkit/craftbukkit/Main.java
 +++ b/src/main/java/org/bukkit/craftbukkit/Main.java
 @@ -278,7 +278,7 @@ public class Main {
@@ -347,10 +347,10 @@ index cdefb2025eedea7e204d70d568adaf1c1ec4c03c..faa3fc872b8b894b2b2f25474ab5ff89
                  // (async tasks must live with race-conditions if they attempt to cancel between these few lines of code)
              }
 diff --git a/src/main/java/org/bukkit/craftbukkit/util/CraftMagicNumbers.java b/src/main/java/org/bukkit/craftbukkit/util/CraftMagicNumbers.java
-index 103ab25119bfcdd21eac7e1deeac025108e3c138..0a0a57077236091d5a1c45afb70b237f9d426be9 100644
+index 17336102d37a5ab05c3b3c93fcf46961d0ffa7e2..6299c219c3f921bb38b34f0fd796eaf76bb94cb5 100644
 --- a/src/main/java/org/bukkit/craftbukkit/util/CraftMagicNumbers.java
 +++ b/src/main/java/org/bukkit/craftbukkit/util/CraftMagicNumbers.java
-@@ -435,7 +435,7 @@ public final class CraftMagicNumbers implements UnsafeValues {
+@@ -433,7 +433,7 @@ public final class CraftMagicNumbers implements UnsafeValues {
  
      @Override
      public com.destroystokyo.paper.util.VersionFetcher getVersionFetcher() {
