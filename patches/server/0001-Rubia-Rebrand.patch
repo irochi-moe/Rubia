@@ -49,15 +49,20 @@ index d5d49bb2b47c889e12d17dc87b8c439a60b3fe67..f3f78a7cbf44039cb99fd419631bd030
      standardInput = System.`in`
      workingDir = rootProject.layout.projectDirectory
 diff --git a/src/main/java/com/destroystokyo/paper/Metrics.java b/src/main/java/com/destroystokyo/paper/Metrics.java
-index 7b1843e16745ca8db2244e17490d291401f22679..23b38d17bc99904fd9d426452f2eafabb6d31bed 100644
+index 4b002e8b75d117b726b0de274a76d3596fce015b..5753cbe218cc2bdb74b1630a5520b02faf17397d 100644
 --- a/src/main/java/com/destroystokyo/paper/Metrics.java
 +++ b/src/main/java/com/destroystokyo/paper/Metrics.java
-@@ -603,7 +603,7 @@ public class Metrics {
- 
-                 metrics.addCustomChart(new Metrics.SingleLineChart("players", () -> Bukkit.getOnlinePlayers().size()));
-                 metrics.addCustomChart(new Metrics.SimplePie("online_mode", () -> Bukkit.getOnlineMode() ? "online" : "offline"));
--                metrics.addCustomChart(new Metrics.SimplePie("paper_version", () -> (Metrics.class.getPackage().getImplementationVersion() != null) ? Metrics.class.getPackage().getImplementationVersion() : "unknown"));
-+                metrics.addCustomChart(new Metrics.SimplePie("rubia_version", () -> (Metrics.class.getPackage().getImplementationVersion() != null) ? Metrics.class.getPackage().getImplementationVersion() : "unknown")); // Rubia
+@@ -607,11 +607,11 @@ public class Metrics {
+                 final String implVersion = org.bukkit.craftbukkit.Main.class.getPackage().getImplementationVersion();
+                 if (implVersion != null) {
+                     final String buildOrHash = implVersion.substring(implVersion.lastIndexOf('-') + 1);
+-                    paperVersion = "git-Paper-%s-%s".formatted(Bukkit.getServer().getMinecraftVersion(), buildOrHash);
++                    paperVersion = "git-Rubia-%s-%s".formatted(Bukkit.getServer().getMinecraftVersion(), buildOrHash); // Rubia
+                 } else {
+                     paperVersion = "unknown";
+                 }
+-                metrics.addCustomChart(new Metrics.SimplePie("paper_version", () -> paperVersion));
++                metrics.addCustomChart(new Metrics.SimplePie("rubia_version", () -> paperVersion)); // Rubia
  
                  metrics.addCustomChart(new Metrics.DrilldownPie("java_version", () -> {
                      Map<String, Map<String, Integer>> map = new HashMap<>();
@@ -308,7 +313,7 @@ index bd502ca721de0cab438d995efa00ad0554c0d2fe..916d5e97fa88cef477b0aa27ef119216
  
      private static final int DEFAULT_SIZE_THRESHOLD = 1024 * 8;
 diff --git a/src/main/java/org/bukkit/craftbukkit/CraftServer.java b/src/main/java/org/bukkit/craftbukkit/CraftServer.java
-index 47df6f4268a63118da8187f4102c876bd37d1680..17247aaacc29fc53c047169772a473ab87a5bd36 100644
+index bfc4ee36befb925ab4eb6b96f5c1aa6c76bf711f..8e6703bfcd82e285a7a5c737eadc6cd0c1ee4dfc 100644
 --- a/src/main/java/org/bukkit/craftbukkit/CraftServer.java
 +++ b/src/main/java/org/bukkit/craftbukkit/CraftServer.java
 @@ -261,7 +261,7 @@ import javax.annotation.Nullable; // Paper
@@ -321,7 +326,7 @@ index 47df6f4268a63118da8187f4102c876bd37d1680..17247aaacc29fc53c047169772a473ab
      private final String bukkitVersion = Versioning.getBukkitVersion();
      private final Logger logger = Logger.getLogger("Minecraft");
 diff --git a/src/main/java/org/bukkit/craftbukkit/Main.java b/src/main/java/org/bukkit/craftbukkit/Main.java
-index e072a5475a64d110f25ebcc871aa7703c2fc1e70..662495adc6697b4c19125965d0ff8e6aa5ebf35b 100644
+index 119d9bb5e41038704654e248bf168d22af246b7f..b6f0f57feed002c40f149ad9453a90d3b8b7d8bf 100644
 --- a/src/main/java/org/bukkit/craftbukkit/Main.java
 +++ b/src/main/java/org/bukkit/craftbukkit/Main.java
 @@ -278,7 +278,7 @@ public class Main {

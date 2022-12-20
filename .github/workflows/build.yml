@@ -3,7 +3,7 @@ on:
   push:
     branches:
       - main
-      - ver/1.19.2
+      - ver/1.19.3
   pull_request:
   workflow_dispatch:
 

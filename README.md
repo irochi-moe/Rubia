@@ -3,11 +3,11 @@
   <h3>Personal Paper fork by Irochi</h3>
   <h4><b>This is for personal usage and you might get no support from me. Any contributions are welcome!</b></h4>
 
-[![Watchers](https://img.shields.io/github/watchers/IrochiMC/Rubia?style=for-the-badge)](https://github.com/IrochiMC/Rubia/watchers)
-[![Forks](https://img.shields.io/github/forks/IrochiMC/Rubia?style=for-the-badge)](https://github.com/IrochiMC/Rubia/network/members)
-[![Stars](https://img.shields.io/github/stars/IrochiMC/Rubia?style=for-the-badge)](https://github.com/IrochiMC/Rubia/stargazers)
-[![License](https://img.shields.io/github/license/IrochiMC/Rubia?style=for-the-badge&logo=github)](LICENSE)
-[![Build](https://img.shields.io/github/workflow/status/IrochiMC/Rubia/Build?logo=GoogleAnalytics&style=for-the-badge&logoColor=ffffff)](https://github.com/IrochiMC/Rubia/actions)
+[![Watchers](https://img.shields.io/github/watchers/irochi-moe/Rubia?style=for-the-badge)](https://github.com/IrochiMC/Rubia/watchers)
+[![Forks](https://img.shields.io/github/forks/irochi-moe/Rubia?style=for-the-badge)](https://github.com/IrochiMC/Rubia/network/members)
+[![Stars](https://img.shields.io/github/stars/irochi-moe/Rubia?style=for-the-badge)](https://github.com/IrochiMC/Rubia/stargazers)
+[![License](https://img.shields.io/github/license/irochi-moe/Rubia?style=for-the-badge&logo=github)](LICENSE)
+[![Build](https://img.shields.io/github/actions/workflow/status/irochi-moe/Rubia/build.yml?branch=ver%2F1.19.3&logo=GoogleAnalytics&style=for-the-badge&logoColor=ffffff)](https://github.com/IrochiMC/Rubia/actions)
 
 [![Discord](<https://img.shields.io/discord/883670043404173352?color=5865F2&label=discord(not_ready)&style=for-the-badge>)](https://irochi.moe)
 
@@ -22,7 +22,7 @@
 
 ## Downloads
 
-All of Rubia builds can be downloaded in [Release section](https://github.com/IrochiMC/Rubia/releases)
+All of Rubia builds can be downloaded in [Release section](https://github.com/irochi-moe/Rubia/releases)
 
 **Make sure you have Java version 17 or higher.**
 

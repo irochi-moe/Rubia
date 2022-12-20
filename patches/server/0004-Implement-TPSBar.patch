@@ -308,10 +308,10 @@ index 461d1fa33ddac548ed119a3d3019e454f2ce917c..1065d0b31406fc45cc54e44902bd6f17
          }
      }
 diff --git a/src/main/java/net/minecraft/server/level/ServerPlayer.java b/src/main/java/net/minecraft/server/level/ServerPlayer.java
-index c0b0a7fdb75266a7064d54bda6441953184ecc64..d7824ed0f83de2112d2a222f4dd54cd76d95793e 100644
+index 7d6d3c8556033d289fdadc489e73fba478fce41a..163221305b24b5d7e20e434b78d644e6795cb8b9 100644
 --- a/src/main/java/net/minecraft/server/level/ServerPlayer.java
 +++ b/src/main/java/net/minecraft/server/level/ServerPlayer.java
-@@ -270,6 +270,7 @@ public class ServerPlayer extends Player {
+@@ -268,6 +268,7 @@ public class ServerPlayer extends Player {
      public final com.destroystokyo.paper.util.misc.PooledLinkedHashSets.PooledObjectLinkedOpenHashSet<ServerPlayer> cachedSingleHashSet; // Paper
      public PlayerNaturallySpawnCreaturesEvent playerNaturallySpawnedEvent; // Paper
      public org.bukkit.event.player.PlayerQuitEvent.QuitReason quitReason = null; // Paper - there are a lot of changes to do if we change all methods leading to the event
@@ -319,7 +319,7 @@ index c0b0a7fdb75266a7064d54bda6441953184ecc64..d7824ed0f83de2112d2a222f4dd54cd7
  
      public ServerPlayer(MinecraftServer server, ServerLevel world, GameProfile profile) {
          super(world, world.getSharedSpawnPos(), world.getSharedSpawnAngle(), profile);
-@@ -508,6 +509,7 @@ public class ServerPlayer extends Player {
+@@ -506,6 +507,7 @@ public class ServerPlayer extends Player {
              }
          }
  
@@ -327,7 +327,7 @@ index c0b0a7fdb75266a7064d54bda6441953184ecc64..d7824ed0f83de2112d2a222f4dd54cd7
      }
  
      @Override
-@@ -574,6 +576,7 @@ public class ServerPlayer extends Player {
+@@ -572,6 +574,7 @@ public class ServerPlayer extends Player {
          }
          this.getBukkitEntity().setExtraData(nbt); // CraftBukkit
  
@@ -335,7 +335,7 @@ index c0b0a7fdb75266a7064d54bda6441953184ecc64..d7824ed0f83de2112d2a222f4dd54cd7
      }
  
      // CraftBukkit start - World fallback code, either respawn location or global spawn
-@@ -2550,4 +2553,14 @@ public class ServerPlayer extends Player {
+@@ -2548,4 +2551,14 @@ public class ServerPlayer extends Player {
          return (CraftPlayer) super.getBukkitEntity();
      }
      // CraftBukkit end
@@ -351,10 +351,10 @@ index c0b0a7fdb75266a7064d54bda6441953184ecc64..d7824ed0f83de2112d2a222f4dd54cd7
 +    // Rubia end
  }
 diff --git a/src/main/java/net/minecraft/server/players/PlayerList.java b/src/main/java/net/minecraft/server/players/PlayerList.java
-index b348d33726b2b14ea2d12ce3430df2c0b94295f4..f3f40cc08930725a4562fccf7cd37d434b421359 100644
+index c0b599b1835d28ddda3690b29f29bd8c6f03e215..e1f2111c77eba571ed9d786bdee25c9909b19ce1 100644
 --- a/src/main/java/net/minecraft/server/players/PlayerList.java
 +++ b/src/main/java/net/minecraft/server/players/PlayerList.java
-@@ -511,6 +511,7 @@ public abstract class PlayerList {
+@@ -449,6 +449,7 @@ public abstract class PlayerList {
              scoreboard.addPlayerToTeam(player.getScoreboardName(), collideRuleTeam);
          }
          // Paper end
@@ -362,7 +362,7 @@ index b348d33726b2b14ea2d12ce3430df2c0b94295f4..f3f40cc08930725a4562fccf7cd37d43
          // CraftBukkit - Moved from above, added world
          PlayerList.LOGGER.info("{}[{}] logged in with entity id {} at ([{}]{}, {}, {})", player.getName().getString(), s1, player.getId(), worldserver1.serverLevelData.getLevelName(), player.getX(), player.getY(), player.getZ());
      }
-@@ -621,6 +622,8 @@ public abstract class PlayerList {
+@@ -558,6 +559,8 @@ public abstract class PlayerList {
      }
      public net.kyori.adventure.text.Component remove(ServerPlayer entityplayer, net.kyori.adventure.text.Component leaveMessage) {
          // Paper end
