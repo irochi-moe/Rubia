@@ -131,10 +131,10 @@ index 0000000000000000000000000000000000000000..924179c6a891940c025d27283bd8f7ca
 +}
 diff --git a/src/main/java/moe/irochi/rubia/RubiaConfig.java b/src/main/java/moe/irochi/rubia/RubiaConfig.java
 new file mode 100644
-index 0000000000000000000000000000000000000000..6fca938e7fb31c82f90c48ebb45385768f5f21c3
+index 0000000000000000000000000000000000000000..3d82716576e1d90bad93c7192bf23a8ebfe2390c
 --- /dev/null
 +++ b/src/main/java/moe/irochi/rubia/RubiaConfig.java
-@@ -0,0 +1,135 @@
+@@ -0,0 +1,138 @@
 +package moe.irochi.rubia;
 +
 +import java.io.File;
@@ -267,6 +267,9 @@ index 0000000000000000000000000000000000000000..6fca938e7fb31c82f90c48ebb4538576
 +    private static List<String> getStringList(String key, @Nullable String oldKey, List<String> defaultValue, String... comment) {
 +        ensureDefault(key, defaultValue, comment);
 +        return config.getStringList(key);
++    }
++
++    private static void miscSettings() {
 +    }
 +
 +}

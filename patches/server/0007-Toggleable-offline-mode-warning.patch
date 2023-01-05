@@ -5,18 +5,18 @@ Subject: [PATCH] Toggleable offline mode warning
 
 
 diff --git a/src/main/java/moe/irochi/rubia/RubiaConfig.java b/src/main/java/moe/irochi/rubia/RubiaConfig.java
-index 2433255f45ca520cd5a6e6f2be9ecaef94b9f186..0948896013e9ec6ea85e3f9398dae16f133e4476 100644
+index 3d82716576e1d90bad93c7192bf23a8ebfe2390c..2e49a099cbff0b4da1f6b2a30c55a43e29380d5f 100644
 --- a/src/main/java/moe/irochi/rubia/RubiaConfig.java
 +++ b/src/main/java/moe/irochi/rubia/RubiaConfig.java
-@@ -133,7 +133,9 @@ public class RubiaConfig {
+@@ -132,7 +132,9 @@ public class RubiaConfig {
+         return config.getStringList(key);
      }
  
-     public static boolean disableOutOfOrderChat;
 +    public static boolean offlineWarning;
      private static void miscSettings() {
-         disableOutOfOrderChat = getBoolean("disable-out-of-order-chat", false);
 +        offlineWarning = getBoolean("offline-warning", true);
      }
+ 
  }
 diff --git a/src/main/java/net/minecraft/server/dedicated/DedicatedServer.java b/src/main/java/net/minecraft/server/dedicated/DedicatedServer.java
 index 0f11355863e61a81b5e5e257657b62c12c4e8a48..c3649d116f77c0d0e68b3e80693bc93da781b469 100644
